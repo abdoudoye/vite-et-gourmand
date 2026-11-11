@@ -5,3 +5,8 @@ node_modules/
 dist/
 coverage/
 *.log
+*.pem
+credentials.json
+*.tmp
+*.bak
+.DS_Store

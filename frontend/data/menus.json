@@ -1,0 +1,8 @@
+[
+  { "id": 1, "title": "Table du Sud", "description": "Une proposition ensoleillée autour des légumes et des herbes du Sud.", "basePriceCents": 18000, "minimumPeople": 6, "theme": "Convivial", "diet": "Végétarien" },
+  { "id": 2, "title": "Le Jardin de saison", "description": "Un assortiment végétal coloré pour une table généreuse.", "basePriceCents": 12000, "minimumPeople": 4, "theme": "Nature", "diet": "Végétalien" },
+  { "id": 3, "title": "La Grande Réception", "description": "Une inspiration festive pour les grandes occasions.", "basePriceCents": 48000, "minimumPeople": 12, "theme": "Fête", "diet": "Classique" },
+  { "id": 4, "title": "L'Escale gourmande", "description": "Des associations douces et épicées pour un repas à partager.", "basePriceCents": 24000, "minimumPeople": 8, "theme": "Voyage", "diet": "Classique" },
+  { "id": 5, "title": "Le Banquet végétal", "description": "Une table de fête imaginée autour des saveurs végétales.", "basePriceCents": 36000, "minimumPeople": 10, "theme": "Fête", "diet": "Végétalien" },
+  { "id": 6, "title": "Le Déjeuner champêtre", "description": "Une pause conviviale inspirée des repas à la campagne.", "basePriceCents": 18000, "minimumPeople": 6, "theme": "Nature", "diet": "Végétarien" }
+]

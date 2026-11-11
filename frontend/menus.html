@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nos menus — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <script src="menu-filters.js" defer></script>
+  <script src="menus.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#catalogue">Aller aux menus</a>
+  <header class="site-header">
+    <a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html" aria-current="page">Menus</a></nav>
+  </header>
+  <main id="catalogue">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">À partager, tout simplement</p>
+      <h1 id="page-title">Un menu pour chaque occasion.</h1>
+      <p>Explorez les saveurs et trouvez un menu adapté à votre table.</p>
+      <p class="demo"><strong>Catalogue de démonstration.</strong> Tous les noms, descriptions, prix et nombres de personnes sont fictifs. Ils ne constituent pas une offre commerciale.</p>
+    </section>
+    <div class="catalogue-layout">
+      <aside aria-labelledby="filters-title">
+        <form id="filters">
+          <h2 id="filters-title">Affiner les menus</h2>
+          <p id="price-help">Prix total du menu pour son minimum de personnes, hors livraison.</p>
+          <label for="max-price">Prix maximum (€)</label>
+          <input id="max-price" name="maxPrice" type="number" min="0" step="0.01" placeholder="Sans plafond" aria-describedby="price-help">
+          <fieldset><legend>Fourchette de prix (€)</legend>
+            <label for="price-from">De</label><input id="price-from" name="priceFrom" type="number" min="0" step="0.01" placeholder="0">
+            <label for="price-to">À</label><input id="price-to" name="priceTo" type="number" min="0" step="0.01" placeholder="Sans plafond">
+          </fieldset>
+          <label for="theme">Thème</label><select id="theme" name="theme"><option value="">Tous les thèmes</option></select>
+          <label for="diet">Régime alimentaire</label><select id="diet" name="diet"><option value="">Tous les régimes</option></select>
+          <label for="people">Nombre de personnes de votre groupe</label>
+          <input id="people" name="people" type="number" min="1" step="1" placeholder="Sans limite" aria-describedby="people-help">
+          <p id="people-help">Affiche les menus dont le minimum de personnes est inférieur ou égal à ce nombre.</p>
+          <p id="filter-error" class="error" role="alert"></p>
+          <button type="reset">Réinitialiser les filtres</button>
+        </form>
+      </aside>
+      <section aria-labelledby="results-title" aria-busy="true" id="results">
+        <h2 id="results-title">Les menus</h2>
+        <p id="result-count" role="status" aria-live="polite" aria-atomic="true">Chargement des menus…</p>
+        <p id="empty" hidden>Aucun menu ne correspond à vos critères. Modifiez ou réinitialisez les filtres.</p>
+        <p id="load-error" class="error" role="alert" hidden>Impossible de charger les menus. Vérifiez votre connexion puis rechargez la page.</p>
+        <div id="menu-list" class="menu-grid"></div>
+        <noscript>Activez JavaScript pour charger les menus et utiliser les filtres.</noscript>
+      </section>
+    </div>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF · Données fictives</footer>
+</body>
+</html>
