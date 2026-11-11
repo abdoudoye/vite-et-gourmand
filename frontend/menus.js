@@ -12,11 +12,8 @@ async function loadMenus() {
   const response = await fetch("data/menus.json");
   if (!response.ok) throw new Error("Chargement indisponible");
   const data = await response.json();
-  if (!Array.isArray(data) || !data.every((menu) =>
-    Number.isInteger(menu.id) && Number.isInteger(menu.basePriceCents) && menu.basePriceCents >= 0 &&
-    Number.isInteger(menu.minimumPeople) && menu.minimumPeople > 0 &&
-    [menu.title, menu.description, menu.theme, menu.diet].every((value) => typeof value === "string" && value.length > 0)
-  )) throw new Error("Format de données invalide");
+  if (!Array.isArray(data) || !data.every(isValidMenu) ||
+    new Set(data.map((menu) => menu.id)).size !== data.length) throw new Error("Format de données invalide");
   return data;
 }
 
@@ -55,6 +52,28 @@ function render() {
     const card = element("article", "", "menu-card");
     const body = element("div", "", "card-body");
     body.append(element("h3", menu.title), element("p", menu.description), element("span", menu.diet, "tag"), element("p", currency.format(menu.basePriceCents / 100), "price"), element("p", `Pour ${menu.minimumPeople} personnes minimum · hors livraison`, "price-note"));
+    const detail = createMenuDetails(menu);
+    const toggle = element("button", "Voir le détail");
+    toggle.type = "button";
+    toggle.setAttribute("aria-label", `Voir le détail : ${menu.title}`);
+    toggle.setAttribute("aria-controls", detail.id);
+    toggle.setAttribute("aria-expanded", "false");
+    const close = element("button", "Retour au catalogue");
+    close.type = "button";
+    const setOpen = (open) => {
+      detail.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Masquer le détail" : "Voir le détail";
+      toggle.setAttribute("aria-label", `${toggle.textContent} : ${menu.title}`);
+      (open ? detail.querySelector("h4") : toggle).focus();
+    };
+    toggle.addEventListener("click", () => setOpen(detail.hidden));
+    close.addEventListener("click", () => setOpen(false));
+    detail.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") { event.preventDefault(); setOpen(false); }
+    });
+    detail.append(close);
+    body.append(toggle, detail);
     card.append(element("div", `Exemple fictif · ${menu.theme}`, "card-top"), body);
     list.append(card);
   }

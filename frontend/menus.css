@@ -38,5 +38,20 @@ footer { border-top: 1px solid var(--line); text-align: center; padding: 1.5rem;
 .skip-link { position: absolute; left: 1rem; top: -100px; background: white; padding: .7rem; z-index: 1; }
 .skip-link:focus { top: 1rem; }
 [hidden] { display: none !important; }
+.menu-detail { border-top: 1px solid var(--line); margin-top: 1.3rem; padding-top: 1rem; overflow-wrap: anywhere; }
+.menu-detail h4 { font: bold 1.4rem Georgia, serif; margin: 0 0 1rem; }
+.menu-detail h5 { font: bold 1.05rem system-ui, sans-serif; margin: 1.2rem 0 .5rem; }
+.menu-detail img { display: block; width: 100%; height: auto; border-radius: .3rem; }
+.menu-detail dt { font-weight: 700; margin-top: .8rem; }
+.menu-detail dd { margin: .2rem 0; }
+.menu-detail ul { padding-left: 1.3rem; }
+.menu-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: .8rem; }
+.menu-gallery figure { margin: 0; min-width: 0; }
+.menu-gallery figcaption { font-size: .85rem; margin-top: .4rem; }
+.order-conditions { background: #eee8d9; border: 2px solid #805628; border-radius: .3rem; padding: 1rem; margin: 1rem 0; }
+.order-conditions h5, .order-conditions h6 { font-size: 1rem; margin: .5rem 0; }
+.action-link { display: inline-block; background: var(--green); color: white; padding: .7rem 1rem; border-radius: .3rem; text-align: center; }
+.action-link:hover { background: #183b2b; }
+button:disabled { cursor: not-allowed; background: #59655d; }
 @media (max-width: 950px) { .menu-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .catalogue-layout { grid-template-columns: 1fr; } main { padding-top: 1rem; } .site-header { align-items: start; } }

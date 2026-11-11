@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commander — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <script src="menu-details.js" defer></script>
+  <script src="commande.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#commande">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html">Menus</a></nav>
+  </header>
+  <main id="commande">
+    <h1>Commander un menu</h1>
+    <p class="demo"><strong>Parcours de démonstration.</strong> Aucune commande n’est créée, validée ou réservée.</p>
+    <p id="selection-status" role="status" aria-live="polite">Chargement du menu sélectionné…</p>
+    <section id="selected-menu" hidden aria-labelledby="selection-title">
+      <h2 id="selection-title"></h2>
+      <p id="selection-id"></p>
+      <p id="selection-description"></p>
+      <div class="order-conditions">
+        <h3>Connexion nécessaire pour continuer</h3>
+        <p>Vous devrez vous connecter à votre compte client ou créer un compte pour commander ce menu.</p>
+        <p>La connexion et le formulaire de commande ne sont pas encore disponibles. Votre choix est conservé dans l’adresse de cette page ; vous pouvez la recharger.</p>
+      </div>
+    </section>
+    <p><a class="action-link" href="menus.html">Retour au catalogue</a></p>
+    <noscript>Activez JavaScript pour afficher le menu choisi. Aucune commande ne sera créée.</noscript>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF · Données fictives</footer>
+</body>
+</html>
