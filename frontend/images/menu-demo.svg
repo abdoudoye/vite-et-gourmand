@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#eee8d9"/>
+  <ellipse cx="320" cy="205" rx="150" ry="145" fill="#faf8f2" stroke="#294d3d" stroke-width="5"/>
+  <circle cx="320" cy="205" r="105" fill="#e3ecdf"/>
+  <path d="M260 230Q230 130 325 145Q385 135 380 230Q315 270 260 230" fill="#547946"/>
+  <circle cx="290" cy="185" r="20" fill="#ba563c"/><circle cx="350" cy="220" r="22" fill="#ba563c"/>
+  <path d="M115 90V290M95 90V150Q115 175 135 150V90M520 90V290M520 90Q555 150 520 185" fill="none" stroke="#294d3d" stroke-width="8" stroke-linecap="round"/>
+  <text x="320" y="370" text-anchor="middle" font-family="sans-serif" font-size="20" fill="#263b32">Illustration fictive · Menu de démonstration</text>
+</svg>

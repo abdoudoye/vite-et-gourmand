@@ -1,0 +1,386 @@
+[
+  {
+    "id": 1,
+    "title": "Table du Sud",
+    "description": "Une proposition ensoleillée autour des légumes et des herbes du Sud.",
+    "basePriceCents": 18000,
+    "minimumPeople": 6,
+    "theme": "Convivial",
+    "diet": "Végétarien",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Salade de tomates au basilic",
+          "allergens": []
+        }
+      ],
+      "mains": [
+        {
+          "name": "Gratin de légumes et feta",
+          "allergens": [
+            "Lait"
+          ]
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Tarte aux abricots",
+          "allergens": [
+            "Gluten (blé)",
+            "Œufs",
+            "Lait"
+          ]
+        }
+      ]
+    },
+    "stock": 8,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Le Jardin de saison",
+    "description": "Un assortiment végétal coloré pour une table généreuse.",
+    "basePriceCents": 12000,
+    "minimumPeople": 4,
+    "theme": "Nature",
+    "diet": "Végétalien",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Salade de carottes au citron",
+          "allergens": [
+            "Moutarde"
+          ]
+        }
+      ],
+      "mains": [
+        {
+          "name": "Lentilles et légumes rôtis",
+          "allergens": []
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Compote de pommes",
+          "allergens": []
+        }
+      ]
+    },
+    "stock": 5,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "La Grande Réception",
+    "description": "Une inspiration festive pour les grandes occasions.",
+    "basePriceCents": 48000,
+    "minimumPeople": 12,
+    "theme": "Fête",
+    "diet": "Classique",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Saumon fumé et crème citronnée",
+          "allergens": [
+            "Poisson",
+            "Lait"
+          ]
+        }
+      ],
+      "mains": [
+        {
+          "name": "Poulet rôti, pommes de terre",
+          "allergens": []
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Entremets au chocolat",
+          "allergens": [
+            "Lait",
+            "Œufs",
+            "Gluten (blé)"
+          ]
+        }
+      ]
+    },
+    "stock": 3,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "L'Escale gourmande",
+    "description": "Des associations douces et épicées pour un repas à partager.",
+    "basePriceCents": 24000,
+    "minimumPeople": 8,
+    "theme": "Voyage",
+    "diet": "Classique",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Salade de concombre au sésame",
+          "allergens": [
+            "Sésame"
+          ]
+        }
+      ],
+      "mains": [
+        {
+          "name": "Poulet au curry et riz",
+          "allergens": []
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Riz au lait de coco",
+          "allergens": []
+        }
+      ]
+    },
+    "stock": 0,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Le Banquet végétal",
+    "description": "Une table de fête imaginée autour des saveurs végétales.",
+    "basePriceCents": 36000,
+    "minimumPeople": 10,
+    "theme": "Fête",
+    "diet": "Végétalien",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Houmous et pain pita",
+          "allergens": [
+            "Sésame",
+            "Gluten (blé)"
+          ]
+        }
+      ],
+      "mains": [
+        {
+          "name": "Couscous de légumes et pois chiches",
+          "allergens": [
+            "Gluten (blé)"
+          ]
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Salade d’agrumes",
+          "allergens": []
+        }
+      ]
+    },
+    "stock": 4,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Le Déjeuner champêtre",
+    "description": "Une pause conviviale inspirée des repas à la campagne.",
+    "basePriceCents": 18000,
+    "minimumPeople": 6,
+    "theme": "Nature",
+    "diet": "Végétarien",
+    "dishes": {
+      "starters": [
+        {
+          "name": "Salade de tomates au basilic",
+          "allergens": []
+        }
+      ],
+      "mains": [
+        {
+          "name": "Quiche aux légumes",
+          "allergens": [
+            "Lait",
+            "Œufs",
+            "Gluten (blé)"
+          ]
+        }
+      ],
+      "desserts": [
+        {
+          "name": "Tarte aux pommes",
+          "allergens": [
+            "Gluten (blé)",
+            "Œufs",
+            "Lait"
+          ]
+        }
+      ]
+    },
+    "stock": 6,
+    "conditions": {
+      "order": [
+        "Exemple fictif : demande au moins 72 heures avant la prestation.",
+        "Respecter le nombre minimum de personnes indiqué.",
+        "Prix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.",
+        "Démonstration : aucune réservation ni commande réelle."
+      ],
+      "storage": [
+        "Exemple fictif : conserver au réfrigérateur après réception.",
+        "Les températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+      ]
+    },
+    "images": [
+      {
+        "src": "images/entree-demo.svg",
+        "alt": "Illustration fictive d’une salade dans une assiette.",
+        "caption": "Entrée — visuel de démonstration générique."
+      },
+      {
+        "src": "images/menu-demo.svg",
+        "alt": "Illustration fictive d’une assiette de légumes.",
+        "caption": "Plat — visuel de démonstration générique."
+      },
+      {
+        "src": "images/dessert-demo.svg",
+        "alt": "Illustration fictive d’une part de tarte.",
+        "caption": "Dessert — visuel de démonstration générique."
+      }
+    ]
+  }
+]
