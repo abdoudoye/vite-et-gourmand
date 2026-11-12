@@ -93,7 +93,9 @@ test("la réparation ciblée est atomique, réversible et préserve les données
   try {
     await db.exec("CREATE ROLE vg_owner; ALTER DATABASE postgres OWNER TO vg_owner;");
     await db.exec(read("001_schema.sql"));
-    await db.exec(read("002_demo_data.sql"));
+    // Git peut convertir le fichier en CRLF sous Windows : les textes multilignes
+    // du jeu de test doivent conserver les LF du plan JSON, indépendamment du checkout.
+    await db.exec(read("002_demo_data.sql").replace(/\r\n/g, "\n"));
     const correct = await snapshot();
     await t.test("une base déjà correcte n'est pas réécrite", async () => {
       await assert.rejects(run(apply), /Unexpected value or scope/);
