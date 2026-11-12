@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test catalogue.test.js"
+    "check:db": "node check-db.js",
+    "test": "node --test *.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16"
   }
 }

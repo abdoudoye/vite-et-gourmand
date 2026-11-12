@@ -235,7 +235,7 @@ test("la page de commande retrouve le menu après rechargement sans créer de co
       assert.match(selectors["#selection-status"].textContent, /Aucune réservation effectuée/);
       assert.match(selectors["#selection-status"].textContent, menu.stock ? /connexion/ : /stock fictif épuisé/);
     }
-    assert.deepEqual(requests, [["data/menus.json"], ["data/menus.json"]]);
+    assert.deepEqual(requests, [["/api/menus"], ["/api/menus"]]);
     assert.equal(JSON.stringify(menus), before);
   }
 });

@@ -1,0 +1,552 @@
+{
+  "description": "Plan ciblé sur les textes reconnus du jeu fictif ; aucune donnée personnelle.",
+  "changes": [
+    {
+      "table": "menus",
+      "id": "1",
+      "column": "description",
+      "before": "Une proposition ensoleillÃ©e autour des lÃ©gumes et des herbes du Sud.",
+      "after": "Une proposition ensoleillée autour des légumes et des herbes du Sud."
+    },
+    {
+      "table": "menus",
+      "id": "1",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "1",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menus",
+      "id": "2",
+      "column": "description",
+      "before": "Un assortiment vÃ©gÃ©tal colorÃ© pour une table gÃ©nÃ©reuse.",
+      "after": "Un assortiment végétal coloré pour une table généreuse."
+    },
+    {
+      "table": "menus",
+      "id": "2",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "2",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menus",
+      "id": "3",
+      "column": "title",
+      "before": "La Grande RÃ©ception",
+      "after": "La Grande Réception"
+    },
+    {
+      "table": "menus",
+      "id": "3",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "3",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menus",
+      "id": "4",
+      "column": "description",
+      "before": "Des associations douces et Ã©picÃ©es pour un repas Ã  partager.",
+      "after": "Des associations douces et épicées pour un repas à partager."
+    },
+    {
+      "table": "menus",
+      "id": "4",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "4",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menus",
+      "id": "5",
+      "column": "title",
+      "before": "Le Banquet vÃ©gÃ©tal",
+      "after": "Le Banquet végétal"
+    },
+    {
+      "table": "menus",
+      "id": "5",
+      "column": "description",
+      "before": "Une table de fÃªte imaginÃ©e autour des saveurs vÃ©gÃ©tales.",
+      "after": "Une table de fête imaginée autour des saveurs végétales."
+    },
+    {
+      "table": "menus",
+      "id": "5",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "5",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menus",
+      "id": "6",
+      "column": "title",
+      "before": "Le DÃ©jeuner champÃªtre",
+      "after": "Le Déjeuner champêtre"
+    },
+    {
+      "table": "menus",
+      "id": "6",
+      "column": "description",
+      "before": "Une pause conviviale inspirÃ©e des repas Ã  la campagne.",
+      "after": "Une pause conviviale inspirée des repas à la campagne."
+    },
+    {
+      "table": "menus",
+      "id": "6",
+      "column": "order_conditions",
+      "before": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiquÃ©.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplÃ©mentaires Ã  dÃ©finir.\nDÃ©monstration : aucune rÃ©servation ni commande rÃ©elle.",
+      "after": "Exemple fictif : demande au moins 72 heures avant la prestation.\nRespecter le nombre minimum de personnes indiqué.\nPrix pour le minimum de personnes, hors livraison ; tarif des personnes supplémentaires à définir.\nDémonstration : aucune réservation ni commande réelle."
+    },
+    {
+      "table": "menus",
+      "id": "6",
+      "column": "storage_conditions",
+      "before": "Exemple fictif : conserver au rÃ©frigÃ©rateur aprÃ¨s rÃ©ception.\nLes tempÃ©ratures, durÃ©es de conservation et consignes de rÃ©chauffage doivent Ãªtre dÃ©finies par le traiteur pour chaque recette avant toute vente rÃ©elle.",
+      "after": "Exemple fictif : conserver au réfrigérateur après réception.\nLes températures, durées de conservation et consignes de réchauffage doivent être définies par le traiteur pour chaque recette avant toute vente réelle."
+    },
+    {
+      "table": "menu_images",
+      "id": "1",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "1",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "10",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "10",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "11",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "11",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "12",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "12",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "13",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "13",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "14",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "14",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "15",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "15",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "16",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "16",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "17",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "17",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "18",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "18",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "2",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "2",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "3",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "3",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "4",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "4",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "5",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "5",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "6",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "6",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "7",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une salade dans une assiette.",
+      "after": "Illustration fictive d’une salade dans une assiette."
+    },
+    {
+      "table": "menu_images",
+      "id": "7",
+      "column": "caption",
+      "before": "EntrÃ©e â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Entrée — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "8",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une assiette de lÃ©gumes.",
+      "after": "Illustration fictive d’une assiette de légumes."
+    },
+    {
+      "table": "menu_images",
+      "id": "8",
+      "column": "caption",
+      "before": "Plat â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Plat — visuel de démonstration générique."
+    },
+    {
+      "table": "menu_images",
+      "id": "9",
+      "column": "alt_text",
+      "before": "Illustration fictive dâ€™une part de tarte.",
+      "after": "Illustration fictive d’une part de tarte."
+    },
+    {
+      "table": "menu_images",
+      "id": "9",
+      "column": "caption",
+      "before": "Dessert â€” visuel de dÃ©monstration gÃ©nÃ©rique.",
+      "after": "Dessert — visuel de démonstration générique."
+    },
+    {
+      "table": "dishes",
+      "id": "10",
+      "column": "name",
+      "before": "Salade de concombre au sÃ©same",
+      "after": "Salade de concombre au sésame"
+    },
+    {
+      "table": "dishes",
+      "id": "14",
+      "column": "name",
+      "before": "Couscous de lÃ©gumes et pois chiches",
+      "after": "Couscous de légumes et pois chiches"
+    },
+    {
+      "table": "dishes",
+      "id": "15",
+      "column": "name",
+      "before": "Salade dâ€™agrumes",
+      "after": "Salade d’agrumes"
+    },
+    {
+      "table": "dishes",
+      "id": "16",
+      "column": "name",
+      "before": "Quiche aux lÃ©gumes",
+      "after": "Quiche aux légumes"
+    },
+    {
+      "table": "dishes",
+      "id": "2",
+      "column": "name",
+      "before": "Gratin de lÃ©gumes et feta",
+      "after": "Gratin de légumes et feta"
+    },
+    {
+      "table": "dishes",
+      "id": "5",
+      "column": "name",
+      "before": "Lentilles et lÃ©gumes rÃ´tis",
+      "after": "Lentilles et légumes rôtis"
+    },
+    {
+      "table": "dishes",
+      "id": "7",
+      "column": "name",
+      "before": "Saumon fumÃ© et crÃ¨me citronnÃ©e",
+      "after": "Saumon fumé et crème citronnée"
+    },
+    {
+      "table": "dishes",
+      "id": "8",
+      "column": "name",
+      "before": "Poulet rÃ´ti, pommes de terre",
+      "after": "Poulet rôti, pommes de terre"
+    },
+    {
+      "table": "allergens",
+      "id": "2",
+      "column": "name",
+      "before": "Gluten (blÃ©)",
+      "after": "Gluten (blé)"
+    },
+    {
+      "table": "allergens",
+      "id": "3",
+      "column": "name",
+      "before": "Å’ufs",
+      "after": "Œufs"
+    },
+    {
+      "table": "allergens",
+      "id": "6",
+      "column": "name",
+      "before": "SÃ©same",
+      "after": "Sésame"
+    },
+    {
+      "table": "themes",
+      "id": "3",
+      "column": "name",
+      "before": "FÃªte",
+      "after": "Fête"
+    },
+    {
+      "table": "diets",
+      "id": "1",
+      "column": "name",
+      "before": "VÃ©gÃ©tarien",
+      "after": "Végétarien"
+    },
+    {
+      "table": "diets",
+      "id": "2",
+      "column": "name",
+      "before": "VÃ©gÃ©talien",
+      "after": "Végétalien"
+    },
+    {
+      "table": "roles",
+      "id": "employe",
+      "column": "label",
+      "before": "EmployÃ©",
+      "after": "Employé"
+    },
+    {
+      "table": "order_statuses",
+      "id": "accepte",
+      "column": "label",
+      "before": "AcceptÃ©",
+      "after": "Accepté"
+    },
+    {
+      "table": "order_statuses",
+      "id": "annulee",
+      "column": "label",
+      "before": "AnnulÃ©e",
+      "after": "Annulée"
+    },
+    {
+      "table": "order_statuses",
+      "id": "attente_retour_materiel",
+      "column": "label",
+      "before": "En attente du retour de matÃ©riel",
+      "after": "En attente du retour de matériel"
+    },
+    {
+      "table": "order_statuses",
+      "id": "en_preparation",
+      "column": "label",
+      "before": "En prÃ©paration",
+      "after": "En préparation"
+    },
+    {
+      "table": "order_statuses",
+      "id": "livre",
+      "column": "label",
+      "before": "LivrÃ©",
+      "after": "Livré"
+    },
+    {
+      "table": "order_statuses",
+      "id": "refusee",
+      "column": "label",
+      "before": "RefusÃ©e",
+      "after": "Refusée"
+    },
+    {
+      "table": "order_statuses",
+      "id": "terminee",
+      "column": "label",
+      "before": "TerminÃ©e",
+      "after": "Terminée"
+    }
+  ],
+  "unrecognized": []
+}

@@ -7,9 +7,9 @@ const error = document.querySelector("#filter-error");
 const currency = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 let menus = [];
 
-// Seul ce point d'accès changera quand une API Express lira PostgreSQL.
+// Source unique : API Express reliée à PostgreSQL, sans repli sur le JSON fictif.
 async function loadMenus() {
-  const response = await fetch("data/menus.json");
+  const response = await fetch("/api/menus");
   if (!response.ok) throw new Error("Chargement indisponible");
   const data = await response.json();
   if (!Array.isArray(data) || !data.every(isValidMenu) ||

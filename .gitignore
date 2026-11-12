@@ -9,4 +9,5 @@ coverage/
 credentials.json
 *.tmp
 *.bak
+*.backup
 .DS_Store
