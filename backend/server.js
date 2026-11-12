@@ -1,16 +1,41 @@
 
-const express = require("express");
-const path = require("node:path");
+"use strict";
 
-const app = express();
-const PORT = 3000;
+const { loadEnvironment, readConfig } = require("./config.js");
+const { createDatabase } = require("./database.js");
+const { createApp } = require("./app.js");
 
-app.use(express.static(path.join(__dirname, "../frontend")));
+function start() {
+  loadEnvironment();
+  const config = readConfig();
+  const database = createDatabase(config.database);
+  const server = createApp({ database }).listen(config.server.port, config.server.host, () => {
+    console.log(`Serveur démarré sur http://${config.server.host}:${config.server.port}`);
+  });
+  let stopping = false;
+  const shutdown = () => {
+    if (stopping) return;
+    stopping = true;
+    const timeout = setTimeout(() => process.exit(1), 10000);
+    timeout.unref();
+    server.close(async () => {
+      try { if (database) await database.close(); }
+      catch { process.exitCode = 1; }
+      finally { clearTimeout(timeout); }
+    });
+  };
+  server.on("error", () => {
+    console.error("Impossible de démarrer le serveur HTTP. Vérifiez l'adresse et le port.");
+    process.exitCode = 1;
+    shutdown();
+  });
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
+  return { server, database };
+}
 
-app.get("/", (req, res) => {
-  res.send("Bienvenue sur Vite & Gourmand !");
-});
-
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  try { start(); }
+  catch { console.error("Configuration invalide. Vérifiez les variables du fichier .env local."); process.exitCode = 1; }
+}
+module.exports = { start };

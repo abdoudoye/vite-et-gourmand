@@ -12,7 +12,7 @@ function selectedMenuFromSearch(menus, search) {
 async function showSelectedMenu(doc = document, search = window.location.search, request = fetch) {
   const status = doc.querySelector("#selection-status");
   try {
-    const response = await request("data/menus.json");
+    const response = await request("/api/menus");
     if (!response.ok) throw new Error("Chargement indisponible");
     const menus = await response.json();
     if (!Array.isArray(menus) || !menus.every(validateOrderMenu) ||
