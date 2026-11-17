@@ -8,8 +8,28 @@ commande terminée, les droits employés et l’administration. La page 10 impos
 une base relationnelle et une base non relationnelle, sans imposer MongoDB.
 MongoDB est le choix technique déjà retenu pour ce projet.
 
-Cette version se poursuit sur `feature/authentification`. Aucun changement de
-branche, compte réel, migration réelle, commit ou déploiement n’a été effectué.
+## État actuel et niveaux de preuve — 17 novembre 2026
+
+Le code a été sauvegardé dans le commit
+`aa420cf12a0ab2da95dc150c13b379ab6af31348`, puis intégré par fast-forward dans
+`develop` et `main`. Ces trois branches étaient synchronisées avant cette mise
+à jour documentaire, effectuée sur `main`. Aucun nouveau commit documentaire
+n'est compris dans cette référence.
+
+| Niveau de preuve | État actuel |
+| --- | --- |
+| Fonctionnalité développée | Contrôle administrateur actif, consultation des commandes, création/consultation/désactivation des employés, modification des informations et du stock des menus, modération des avis ; périmètre détaillé ci-dessous |
+| Test automatisé réussi | Dernière suite complète : 163 tests réussis, aucun échec, le 17 novembre 2026 ; bases PGlite et clients SQL simulés, sans modification de PostgreSQL local |
+| Validation sur PostgreSQL local | 009, 010 et 011 appliqués, objets/droits contrôlés en lecture seule ; connexions client/employé/administrateur et parcours client confirmés par le porteur ; acceptation/refus validés localement |
+| Validation encore à effectuer | Recette exhaustive de création/désactivation d'employé, édition des menus et modération des avis sur PostgreSQL local ; les tests automatisés ne suffisent pas à la déclarer faite |
+| Déploiement public | Non réalisé ; aucune validation sur Neon, Render ou Atlas déclarée |
+
+Les anciens comptes rendus décrivent l'état au moment de chaque développement.
+Les mentions « préparé », « non appliqué », « aucun compte actif » ou « aucun
+commit » dans ces archives ne remplacent pas cet état courant. Notamment,
+`database/REGISTRATION_AUDIT.md` reste un audit daté du 16 novembre, et les
+documents de parcours conservés peuvent contenir des instructions antérieures.
+Le [README](../README.md) est le point d'entrée actualisé pour l'installation.
 
 ## Parcours disponibles
 
@@ -93,11 +113,14 @@ existante. Les réponses protégées portent `Cache-Control: no-store`. L’inte
 efface les données protégées sur perte de droits et sortie de page, et recharge
 si le navigateur restaure la page depuis son cache de navigation.
 
-## SQL préparé, jamais appliqué à PostgreSQL réel
+## SQL : développé, testé en mémoire et appliqué localement
 
 `database/011_admin_privileges.sql` complète les profils 004, 007, 009 et 010.
-Il est destiné à une revue puis une exécution **manuelle après autorisation
-distincte**, avec le compte de migration capable de prendre le rôle `vg_owner`.
+Il a été revu, corrigé pour limiter les lectures aux colonnes utiles, puis
+**appliqué sur PostgreSQL local**, selon la confirmation du porteur du projet.
+Les droits effectifs ont été vérifiés en lecture seule. Toute application sur
+une nouvelle base exige une revue et une autorisation distinctes, avec le compte
+de migration capable de prendre le rôle `vg_owner`.
 Il ne crée ni utilisateur ni donnée et n’est jamais lancé au démarrage Express.
 
 Il accorde les lectures de profil nécessaires, l’insertion des marqueurs de
@@ -108,9 +131,15 @@ accès direct aux séquences ou écriture d’historique de commande n’est ajo
 
 Les rôles métier partagent `vg_app` : les restrictions administrateur sont
 assurées par Express, pas par RLS. L’ajout de droits SQL est une extension réelle
-du périmètre du compte applicatif, à revoir avant application. Sans ce script,
-les routes utilisant les nouveaux droits peuvent répondre 503 sur la base locale.
-Les tests l’appliquent exclusivement dans une base PGlite jetable en mémoire.
+du périmètre du compte applicatif, à revoir avant chaque nouvelle installation.
+Sur une base neuve dépourvue de ces droits, les routes concernées peuvent répondre
+503. Les tests appliquent le script exclusivement dans une base PGlite jetable
+en mémoire ; cela est distinct de son application locale autorisée par le porteur.
+009 et 010 sont également appliqués localement. Ne rejouer ni ces scripts ni
+les seeds pour simplement démarrer Express. Les connexions locales utilisent
+actuellement les sessions mémoire ; la table de 008 était absente au dernier
+audit. La persistance des sessions PostgreSQL reste à valider sur une installation
+qui utilise effectivement ce mode.
 
 ## Statistiques et MongoDB : analyse avant implémentation
 
@@ -147,10 +176,20 @@ déjà réalisée. Aucune dépendance MongoDB ou variable de connexion inactive 
 
 ## Vérification et suites
 
-Résultat observé le 17 novembre 2026 : **155 tests réussis, aucun échec** avec
-`npm.cmd --prefix backend test`. `git diff --check` réussit également ; les
-nouveaux fichiers non suivis ont été contrôlés séparément pour les espaces de
-fin de ligne. Aucun essai d’écriture n’a été effectué sur PostgreSQL réel.
+**Compte rendu initial :** la première suite comprenait 155 tests réussis.
+**Validation automatisée actuelle :** 163 tests ont réussi, sans échec, le
+17 novembre 2026 avec `npm.cmd --prefix backend test`, après ajout des 8 tests
+du provisionnement administrateur. `git diff --check` et le contrôle de l'index
+ont également réussi lors de la sauvegarde Git. Ces résultats sont ceux des
+exécutions déjà consignées ; cette mise à jour documentaire ne relance pas de
+test ni d'écriture PostgreSQL.
+
+**Validation locale distincte :** les comptes fictifs client, employé et
+administrateur fonctionnent désormais sur PostgreSQL installé, selon le porteur
+du projet. Les décisions d'acceptation/refus ont été validées sur cette base.
+Le contrôle en lecture seule d'une commande refusée a confirmé l'historique et
+le stock courant, sans prouver un stock antérieur non journalisé. Aucun résultat
+de ces essais locaux n'est assimilé à un déploiement public.
 
 Depuis la racine dans un second terminal si le serveur occupe déjà le premier :
 
@@ -169,21 +208,26 @@ publication filtrée, CSRF, états d’interface et doubles soumissions.
 La vérification des pages dans un vrai navigateur à 375 px et sur ordinateur,
 au clavier, reste nécessaire. Les tests DOM ne prouvent pas la qualité visuelle
 ni la conformité RGAA. PGlite sérialise les transactions : les tests de concurrence
-entre connexions PostgreSQL réelles restent également à autoriser et effectuer.
+entre connexions PostgreSQL réelles restent également à autoriser et effectuer,
+au-delà des décisions locales déjà validées.
 
 Pour une vérification fonctionnelle ultérieure, redémarrer Express avec
-`node backend/server.js`, après revue et application autorisée du script SQL.
+`node backend/server.js`, sans réappliquer 011 sur la base locale déjà configurée.
 Utiliser un administrateur de démonstration provisionné hors de l’application,
 dans une base dédiée. Aucune procédure de création d’un administrateur réel
 n’est exécutée ou exposée ici. Tester avec SMTP désactivé pour ne pas envoyer
 de messages réels.
 
-Limites de cette première version : pas de gestion de galerie, d’association de
-plats/allergènes, de création/suppression de menus ou de modification des horaires ;
+Limites actuelles, malgré le code et les tests réussis : pas de gestion de galerie,
+d’association de plats/allergènes, de création/suppression de menus ou de modification des horaires ;
 pas de modération dans l’interface employé ; pas de notification à la terminaison
 d’une commande ; pas de nouvelles transitions de livraison/matériel. Ces éléments
 du sujet, la réinitialisation du mot de passe, l’accueil et les statistiques
-MongoDB restent à compléter. La copie officielle à rendre reste aussi à fournir.
+MongoDB restent à compléter. Les e-mails réels ne sont pas validés et aucun
+déploiement public n'a été réalisé. La cible gratuite GitHub + Render Free +
+Neon Free + Atlas M0 a été validée comme architecture, sans provisionnement ni
+adaptateur d'e-mail HTTPS déjà réalisé. La copie officielle à rendre reste
+aussi à fournir.
 
 ## Fichiers concernés par cette étape
 
@@ -195,7 +239,7 @@ MongoDB restent à compléter. La copie officielle à rendre reste aussi à four
   `frontend/connexion.js`, `frontend/mes-commandes.js`.
 - Tests : nouveaux `backend/admin.test.js`, `backend/admin-ui.test.js` et extension
   de `backend/auth-ui.test.js` pour le lien réservé à l’administrateur.
-- SQL préparé : `database/011_admin_privileges.sql`.
+- SQL développé, testé en mémoire et appliqué localement : `database/011_admin_privileges.sql`.
 - Documentation : ce fichier et `README.md`.
 
 Les autres modifications déjà présentes dans le répertoire de travail avant
