@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Créer un compte — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <link rel="stylesheet" href="inscription.css">
+  <script src="auth-navigation.js" defer></script>
+  <script src="inscription.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#inscription">Aller au formulaire</a>
+  <header class="site-header">
+    <a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html">Menus</a><a href="inscription.html" aria-current="page">Inscription</a></nav>
+  </header>
+  <main id="inscription" class="registration">
+    <h1>Créer mon compte client</h1>
+    <p>Tous les champs sont obligatoires, sauf le complément d’adresse.</p>
+    <p>Ces informations servent à créer votre compte et à préparer vos futures commandes. Le mot de passe est conservé sous forme hachée.</p>
+    <form id="registration-form" aria-describedby="password-help" method="post" action="/api/auth/register">
+      <fieldset><legend>Vos coordonnées</legend>
+        <div class="form-grid">
+          <div><label for="lastName">Nom</label><input id="lastName" name="lastName" autocomplete="family-name" maxlength="100" required aria-describedby="lastName-error"><p id="lastName-error" class="error"></p></div>
+          <div><label for="firstName">Prénom</label><input id="firstName" name="firstName" autocomplete="given-name" maxlength="100" required aria-describedby="firstName-error"><p id="firstName-error" class="error"></p></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error"><p id="email-error" class="error"></p></div>
+          <div><label for="phone">Téléphone</label><input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="phone-error"><p id="phone-error" class="error"></p></div>
+        </div>
+      </fieldset>
+      <fieldset><legend>Votre adresse postale</legend>
+        <label for="street">Numéro et voie</label><input id="street" name="street" autocomplete="address-line1" maxlength="200" required aria-describedby="street-error"><p id="street-error" class="error"></p>
+        <label for="additionalLine">Complément d’adresse (facultatif)</label><input id="additionalLine" name="additionalLine" autocomplete="address-line2" maxlength="200" aria-describedby="additionalLine-error"><p id="additionalLine-error" class="error"></p>
+        <div class="form-grid">
+          <div><label for="postalCode">Code postal</label><input id="postalCode" name="postalCode" autocomplete="postal-code" minlength="2" maxlength="20" required aria-describedby="postalCode-error"><p id="postalCode-error" class="error"></p></div>
+          <div><label for="city">Ville</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" required aria-describedby="city-error"><p id="city-error" class="error"></p></div>
+        </div>
+        <label for="countryCode">Code pays (deux lettres)</label><input id="countryCode" name="countryCode" autocomplete="country" value="FR" minlength="2" maxlength="2" pattern="[A-Za-z]{2}" required aria-describedby="country-help countryCode-error"><p id="country-help">Exemple : FR pour la France.</p><p id="countryCode-error" class="error"></p>
+      </fieldset>
+      <fieldset><legend>Votre mot de passe</legend>
+        <p id="password-help">De 10 à 128 caractères, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial. Les espaces seuls ne sont pas des caractères spéciaux.</p>
+        <label for="password">Mot de passe</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="password-help password-error"><p id="password-error" class="error"></p>
+        <label for="passwordConfirmation">Confirmer le mot de passe</label><input id="passwordConfirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="passwordConfirmation-error"><p id="passwordConfirmation-error" class="error"></p>
+      </fieldset>
+      <p id="form-error" class="error" role="alert" tabindex="-1"></p>
+      <p id="form-status" role="status" aria-live="polite" tabindex="-1"></p>
+      <button type="submit" disabled>Créer mon compte</button>
+    </form>
+    <noscript>JavaScript est nécessaire pour transmettre ce formulaire de manière sécurisée. Aucun compte n’est créé sans son activation.</noscript>
+    <p><a id="login-link" href="connexion.html">Déjà un compte ? Me connecter</a></p>
+    <p><a href="menus.html">Retour aux menus</a></p>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF</footer>
+</body>
+</html>

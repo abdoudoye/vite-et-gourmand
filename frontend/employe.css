@@ -1,0 +1,13 @@
+.employee-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+#employee-filters { display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; gap: 1rem; margin: 1rem 0 2rem; }
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: .4rem; background: white; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+caption { text-align: left; padding: .7rem; font-weight: 600; }
+th, td { text-align: left; padding: .8rem; vertical-align: top; border-top: 1px solid var(--line); }
+th { background: #e3ecdf; }
+td button { margin: 0; min-width: 5rem; }
+#employee-detail { margin: 0; }
+#detail-summary p { overflow-wrap: anywhere; white-space: pre-line; }
+textarea { width: 100%; min-height: 6rem; font: inherit; color: var(--ink); border: 1px solid #7b877e; border-radius: .3rem; padding: .6rem; }
+#employee-history, #employee-contacts { overflow-wrap: anywhere; }
+@media (max-width: 640px) { #employee-filters { grid-template-columns: 1fr; } }

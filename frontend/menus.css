@@ -5,7 +5,7 @@ a { color: inherit; }
 .site-header { padding: 1.3rem max(5%, calc((100% - 1240px)/2)); background: white; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .brand { font: bold 1.5rem Georgia, serif; text-decoration: none; }
 .brand span { color: #805628; }
-nav { display: flex; gap: 1.5rem; }
+nav { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 nav a { text-underline-offset: .4rem; }
 [aria-current] { font-weight: bold; }
 main { max-width: 1240px; margin: auto; padding: 2rem 5% 4rem; }

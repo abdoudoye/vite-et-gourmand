@@ -4,12 +4,14 @@
 const { loadEnvironment, readConfig } = require("./config.js");
 const { createDatabase } = require("./database.js");
 const { createApp } = require("./app.js");
+const { readEmailConfig, createWelcomeMailer } = require("./welcome-email.js");
 
 function start() {
   loadEnvironment();
   const config = readConfig();
+  const mailer = createWelcomeMailer(readEmailConfig());
   const database = createDatabase(config.database);
-  const server = createApp({ database }).listen(config.server.port, config.server.host, () => {
+  const server = createApp({ database, mailer }).listen(config.server.port, config.server.host, () => {
     console.log(`Serveur démarré sur http://${config.server.host}:${config.server.port}`);
   });
   let stopping = false;

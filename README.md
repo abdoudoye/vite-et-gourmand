@@ -21,6 +21,13 @@ de traiteur située à Bordeaux.
 
 ## Technologies
 
+Première version de l’espace administrateur : [périmètre, sécurité, tests et
+script SQL à revoir](docs/ADMINISTRATION.md). Page : `/administrateur.html`,
+accessible avec la connexion existante pour un administrateur actif. Le script
+`database/011_admin_privileges.sql` est préparé mais **non exécuté sur PostgreSQL
+réel**. Les statistiques MongoDB sont analysées dans ce document et restent à
+implémenter ; aucun graphique simulé n’est présenté comme une fonctionnalité.
+
 - HTML, CSS, JavaScript
 - Node.js et Express
 - PostgreSQL
@@ -47,8 +54,8 @@ node backend/server.js
 ```
 
 Ouvrir http://localhost:3000/menus.html. Le port 3000 doit être libre.
-La route `/` conserve le message d'accueil initial. Les pages de connexion
-et de contact ne sont pas encore développées.
+La route `/` conserve le message d'accueil initial. La connexion client est
+disponible sur `/connexion.html` ; la page de contact reste à développer.
 Le catalogue nécessite maintenant PostgreSQL et un `.env` local renseigné (voir
 la configuration plus bas). `HOST` et `PORT` sont configurables ; leur valeur par
 défaut est `127.0.0.1:3000`. Aucun repli silencieux vers le JSON n'est effectué.
@@ -119,13 +126,14 @@ les interactions clavier et l'affichage responsive restent à vérifier dans un 
 
 Le bouton « Commander » est un lien de navigation présenté comme un bouton. L'URL
 conserve uniquement l'identifiant public du menu ; aucune donnée personnelle n'est
-stockée. La page cible annonce qu'une connexion sera nécessaire. L'authentification,
-l'inscription, le véritable formulaire de commande, les contrôles serveur et les
-e-mails restent à développer ; aucune session connectée n'est simulée. Les filtres
+stockée. La page cible annonce qu'une connexion sera nécessaire. L'inscription et
+la connexion et le parcours de commande client sont disponibles dans le code ;
+les scripts SQL requis doivent être appliqués après autorisation (voir ci-dessous). Les filtres
 restent inchangés à l'ouverture/fermeture des fiches dans le catalogue ; le lien de
 retour depuis la page de commande ouvre le catalogue sans restaurer les filtres.
 
-`menus.js` et `commande.js` chargent tous deux `/api/menus`. Le format public
+`menus.js` charge `/api/menus` ; le parcours de commande utilise le contexte
+authentifié `/api/orders/checkout`. Le format public du catalogue
 conserve les champs existants, avec `isDemo: true`. Les menus archivés ou non fictifs
 sont exclus de cette API de démonstration ; aucune donnée de compte n'est exposée.
 
@@ -134,7 +142,7 @@ sont exclus de cette API de démonstration ; aucune donnée de compte n'est expo
 Le backend utilise maintenant le pilote `pg` et un pool PostgreSQL. L'installation
 actuelle déclarée utilise PostgreSQL 18.6, la base `vite_et_gourmand` et le schéma
 `vg`, avec les scripts `001`, `002`, `003` déjà appliqués. **Ne pas les relancer**
-pour démarrer Express. L'authentification des clients reste à développer.
+pour démarrer Express. La connexion client est décrite plus bas.
 Les règles et relations sont détaillées dans [database/SCHEMA.md](database/SCHEMA.md).
 
 Fichiers à examiner avant toute exécution :
@@ -315,3 +323,295 @@ Le rôle/base interne du moteur est préparé pour reproduire la propriété de 
 le script d'administration `000` reste à vérifier sur une véritable installation.
 Les tests ne remplacent pas la validation des versions, de l'authentification,
 du TLS et des droits sur votre futur serveur PostgreSQL.
+
+### Mission 7 — inscription des clients
+
+Avant le premier essai sur la base installée, consulter
+[l'audit PostgreSQL et la procédure autorisée](database/REGISTRATION_AUDIT.md).
+L'audit en lecture seule a confirmé les objets nécessaires, mais constaté des
+droits DML plus larges que le périmètre actuel. Les scripts de réduction `004`
+et de retour arrière `005` sont préparés et testés en mémoire, sans application
+sur la base installée. Le script `006` vérifie ensuite le compte par des booléens
+sans afficher les coordonnées ou le hachage.
+
+Page : http://127.0.0.1:3000/inscription.html (également liée depuis le catalogue).
+La connexion est décrite dans la section suivante ; la réinitialisation reste à développer.
+
+`POST /api/auth/register` accepte uniquement du JSON, limité à 16 Ko :
+`firstName`, `lastName`, `email`, `phone`, `street`, `additionalLine` (facultatif),
+`postalCode`, `city`, `countryCode`, `password`, `passwordConfirmation`.
+L'adresse est découpée selon les colonnes existantes de `vg.addresses`.
+Le code pays utilise deux lettres, par exemple `FR`.
+
+Le serveur vérifie les types, les champs obligatoires, les longueurs, le format
+email, le téléphone (7 à 15 chiffres), le code postal et la confirmation.
+Les noms et adresses acceptent les accents et apostrophes ; les balises et
+caractères de contrôle sont refusés. Les emails sont nettoyés aux extrémités
+et convertis en minuscules. Le mot de passe n'est ni nettoyé ni normalisé.
+La règle Studi demandée est appliquée : au moins 10 caractères avec majuscule,
+minuscule, chiffre et caractère spécial. La limite de 128 caractères est un
+choix technique de protection des ressources.
+
+Le hachage utilise **Argon2id**, sel aléatoire généré par la bibliothèque,
+64 Mio de mémoire, 3 passes, parallélisme 1 ([documentation node-argon2](https://github.com/ranisalt/node-argon2)).
+Seul le hash entre dans la requête SQL. Aucun mot de passe ou hash ne figure
+dans les réponses HTTP, les emails ou les journaux applicatifs.
+Le serveur impose `role_code='utilisateur'`, `is_active=true` et laisse
+`is_demo=false` : les paramètres fournis par un visiteur ne permettent pas
+de choisir son rôle. Aucun administrateur n'est créé par cette route.
+
+Une seule instruction SQL paramétrée insère le compte, l'adresse principale
+et l'événement `bienvenue` dans `vg.email_outbox`. L'index existant
+`users_email_ci_idx` et `ON CONFLICT` empêchent aussi les doublons simultanés.
+Une erreur d'adresse ou d'outbox annule toute l'instruction. Aucune migration
+ni extension de privilèges n'est nécessaire d'après `001_schema.sql` et
+`003_app_privileges.sql`, vérifiés en mémoire sous le rôle `vg_app`.
+Les privilèges réellement installés restent à confirmer sur votre instance.
+**Aucun script SQL ni test d'inscription n'a été exécuté sur la base réelle.**
+
+Réponses : `201` compte créé, `400` validation/JSON invalide, `409` inscription
+impossible avec ces informations (email déjà utilisé), `413` corps trop gros,
+`415` format incorrect, `429` trop de tentatives, `503` service indisponible.
+Les erreurs techniques ne divulguent ni SQL ni secrets. Le statut `409` permet
+cependant de déduire qu'un email est utilisé ; la protection contre l'énumération
+complète demanderait un parcours de confirmation par email, hors de cette étape.
+
+Protection locale : 10 demandes par adresse IP et par fenêtre de 15 minutes,
+au plus 2 traitements de création simultanés par processus, table des compteurs
+bornée. Express ne fait pas confiance aux en-têtes de proxy. Un déploiement sur
+plusieurs processus nécessitera un limiteur partagé et une configuration du proxy
+adaptée. Servir impérativement le formulaire et l'API en HTTPS en production.
+
+#### Email de bienvenue
+
+`EMAIL_MODE=disabled` par défaut : aucun transport SMTP n'est créé, aucun email
+réel n'est envoyé, même si des paramètres SMTP existent. L'événement reste en
+attente dans `email_outbox`. Pour activer volontairement l'envoi, configurer
+`EMAIL_MODE=smtp` et **tous** les paramètres `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` dans le `.env` local.
+`SMTP_FROM` est une adresse simple, sans nom d'affichage. Utiliser `SMTP_SECURE=true`
+pour TLS immédiat (habituellement port 465), `false` pour STARTTLS (habituellement
+587). TLS est obligatoire et les certificats sont vérifiés. Voir la
+[documentation Nodemailer](https://nodemailer.com/smtp/).
+
+L'email contient un texte de bienvenue sans mot de passe. Si le serveur SMTP
+l'accepte, l'événement est marqué `envoye` ; cela ne garantit pas sa réception
+en boîte mail. Si SMTP échoue, le compte reste créé et l'événement en attente.
+La réponse expose `welcomeEmail` : `disabled`, `sent` ou `pending`.
+Il n'existe pas encore de worker de reprise des événements en attente, ni de
+relecture automatique de ceux créés en mode désactivé. Une reprise ultérieure
+devra gérer les doublons possibles si SMTP accepte l'email mais que la mise à
+jour SQL échoue. Aucun envoi SMTP réel n'a été vérifié à cette étape.
+
+#### Vérification sans modifier PostgreSQL réel
+
+```powershell
+npm.cmd --prefix backend ci
+npm.cmd --prefix backend test
+git diff --check
+```
+
+Les tests `registration.test.js` utilisent exclusivement PostgreSQL WASM en
+mémoire avec les scripts et privilèges existants. Ils couvrent inscription,
+validation, doublons simultanés, rôle imposé, vérification Argon2id et sels,
+injections SQL, atomicité, erreurs HTTP, limitation et emails avec doublures.
+`registration-ui.test.js` vérifie les états du formulaire avec une doublure DOM :
+double envoi, erreurs associées aux champs, focus, réseau et effacement des mots
+de passe. Ces tests ne remplacent pas une vérification visuelle dans un navigateur.
+
+Pour vérifier l'affichage, lancer `node backend/server.js`, puis ouvrir
+`/inscription.html`. Tester à 375 px et sur ordinateur, parcourir avec Tab,
+vérifier les labels, le focus et les messages d'erreur. **Ne pas soumettre une
+inscription valide sur la base réelle sans autorisation** : l'endpoint crée
+réellement le compte une fois la base configurée. Le catalogue reste accessible.
+L'énoncé officiel et la copie à rendre sont absents du dépôt ; les exigences de
+cette étape proviennent de la mission fournie. L'information RGPD affichée devra
+être complétée avec le responsable, les durées de conservation et les modalités
+d'exercice des droits avant production ; aucun audit RGAA/RGPD complet n'est affirmé.
+
+### Mission 7 — connexion et sessions
+
+Ouvrir http://127.0.0.1:3000/connexion.html. La page reprend les styles de
+l'inscription, vérifie la session au chargement et propose la déconnexion.
+Les champs ont des labels et des attributs autocomplete ; les messages utilisent
+des régions accessibles et le mot de passe est effacé après chaque tentative.
+Les noms affichés passent par `textContent`, jamais par une insertion HTML.
+La vérification visuelle sur navigateur et mobile reste à effectuer.
+
+| Endpoint | Résultat |
+| --- | --- |
+| `POST /api/auth/login` | JSON `{email,password}` ; 200 et profil public si le compte client/employé/administrateur est actif et le mot de passe correct. |
+| `GET /api/auth/me` | 200 et profil public de la session, ou 401 sans session valide. |
+| `POST /api/auth/logout` | 204, destruction de la session côté serveur et expiration du cookie. |
+
+Le profil contient seulement `id` (chaîne), `firstName`, `lastName`, `email`, `role`.
+Aucun mot de passe, hachage, identifiant de session ou jeton n'est envoyé dans le
+JSON. Les trois réponses ne sont pas mises en cache. Le client reçoit uniquement
+un cookie HttpOnly contenant un identifiant aléatoire signé ; ni `localStorage`
+ni `sessionStorage` ne sont utilisés. L'email est nettoyé et passé en minuscules
+comme à l'inscription, puis recherché avec une requête SQL paramétrée.
+Le mot de passe n'est pas normalisé ni nettoyé ; il est vérifié avec
+`argon2.verify` et le hachage Argon2id créé à l'inscription.
+
+Email inconnu, mauvais mot de passe, utilisateur inactif/désactivé, compte sans
+hash Argon2id valide ou rôle inconnu produisent la même réponse
+401 : « Email ou mot de passe incorrect. » Une vérification Argon2id factice
+est effectuée quand le hachage est absent, sans créer de compte. Cette mesure
+réduit les différences de temps sans prétendre rendre le système parfaitement
+constant en temps. Les messages techniques restent génériques (503).
+La réinitialisation reste à développer. La connexion employé/administrateur
+réutilise maintenant ce même mécanisme et ne permet pas de choisir son rôle.
+
+#### Durée et sécurité
+
+La session est renouvelée après une connexion réussie (prévention de fixation),
+expirée après **2 heures au maximum**, sans prolongation à chaque consultation.
+Le store conserve les métadonnées du cookie, l'identifiant utilisateur et la date
+de connexion ; pas de coordonnées ni de hachage de mot de passe. Sa clé est le
+digest SHA-256 de l'identifiant de session. `me` relit l'utilisateur actif en base :
+une désactivation ou un changement de rôle invalide la session lors de cet accès.
+La déconnexion détruit l'entrée du store : rejouer l'ancien cookie ne suffit pas
+à retrouver la session. Un échec du store ne confirme pas la connexion.
+Les futures actions protégées devront réutiliser un contrôle serveur du compte
+et de ses droits ; le parcours de commande décrit ci-dessous utilise désormais ces contrôles.
+
+Le cookie a `HttpOnly`, `SameSite=Lax`, `Path=/`, sans `Domain`.
+En production, il a aussi `Secure` et le nom `__Host-vg.sid` ; en développement
+HTTP local, il s'appelle `vg.sid`. La gestion du cookie et de la signature repose
+sur [express-session](https://github.com/expressjs/session).
+Ne pas activer de journalisation détaillée des cookies ou des corps de requêtes
+sur le proxy ; ils contiennent des informations sensibles.
+
+Les POST login/logout exigent l'en-tête `X-Requested-With: ViteGourmand`.
+La page l'ajoute automatiquement. Les origines étrangères, les requêtes indiquées
+cross-site et les formulaires simples sont refusés (403). Aucun accès CORS n'est
+accordé. En production, `APP_ORIGIN` définit l'origine HTTPS autorisée exacte.
+Ne pas ajouter une politique CORS permissive sans revoir cette protection CSRF.
+Le limiteur de connexion accepte au plus 10 demandes par IP et 15 minutes avec
+deux vérifications coûteuses simultanées par processus. Il faudra un limiteur
+partagé si plusieurs processus sont déployés. Le store local est borné à 1000
+sessions ; il refuse une nouvelle session s'il est plein plutôt que grossir
+sans limite.
+
+#### Configuration
+
+En local, le défaut est `SESSION_STORE=memory` : aucune table de sessions n'est
+nécessaire et les sessions disparaissent au redémarrage. Sans SESSION_SECRET,
+un secret aléatoire est généré pour ce démarrage. Les comptes, eux, sont toujours
+lus dans PostgreSQL : aucune connexion fictive n'est simulée par l'application.
+
+En production, la configuration refuse le stockage mémoire et exige :
+
+```dotenv
+NODE_ENV=production
+SESSION_STORE=postgres
+SESSION_SECRET=secret_aleatoire_a_renseigner_hors_git_au_moins_32_caracteres
+APP_ORIGIN=https://votre-domaine.example
+TRUST_PROXY_HOPS=0
+```
+
+La valeur de secret ci-dessus décrit le format, **elle ne doit pas être utilisée**.
+Générer et conserver un secret dédié dans votre gestionnaire de secrets.
+Le store PostgreSQL réutilise le connecteur `database.js` et son compte `vg_app`
+contrôlé avant chaque requête. Il n'utilise pas de compte administrateur.
+`SESSION_STORE=postgres` est également disponible en local pour un test autorisé.
+Une table absente produit une erreur générique ; aucun CREATE TABLE n'est lancé
+automatiquement. Les sessions expirées ne sont plus acceptées ; leur suppression
+physique doit être planifiée par l'exploitation sur `expires_at` (voir script 008).
+
+Mettre `TRUST_PROXY_HOPS=1` seulement derrière un unique proxy HTTPS maîtrisé,
+qui remplace les en-têtes de transfert, avec Node inaccessible directement.
+Sinon garder 0 et fournir TLS directement à Express via l'infrastructure retenue.
+Les POST d'authentification en production refusent une requête vue comme HTTP.
+Le cookie Secure nécessite HTTPS pour être reçu puis renvoyé par le navigateur.
+
+#### SQL préparé — aucune exécution sur PostgreSQL réel
+
+`database/007_login_privileges.sql` ajoute uniquement SELECT sur les colonnes
+nécessaires à login/me. Il est nécessaire si le profil restreint 004 est installé ;
+le profil large 003 donne déjà cette lecture. Il ne donne aucun UPDATE sur users.
+`database/008_web_sessions.sql` crée une table de sessions dédiée, son index
+d'expiration et les droits SELECT/INSERT/UPDATE/DELETE ciblés. Il ne nécessite
+aucune séquence et n'altère ni `users`, ni `roles`, ni `addresses`.
+Les scripts sont uniquement préparés et testés en mémoire. Aucun compte réel,
+aucune donnée, aucun privilège ni schéma PostgreSQL réel n'a été modifié pour
+développer cette connexion. Ne pas rejouer 004 après ces compléments : il retire
+les droits ajoutés pour cette mission.
+
+Commandes à utiliser **uniquement après autorisation explicite** :
+
+```powershell
+# Si le profil restreint 004 est installe :
+& 'C:\Program Files\PostgreSQL\18\bin\psql.exe' -X -h 127.0.0.1 -p 5432 -U vg_migrator -d vite_et_gourmand -W -v ON_ERROR_STOP=1 -f database/007_login_privileges.sql
+# Seulement pour SESSION_STORE=postgres :
+& 'C:\Program Files\PostgreSQL\18\bin\psql.exe' -X -h 127.0.0.1 -p 5432 -U vg_migrator -d vite_et_gourmand -W -v ON_ERROR_STOP=1 -f database/008_web_sessions.sql
+```
+
+#### Tests sans PostgreSQL réel
+
+```powershell
+npm.cmd --prefix backend ci
+npm.cmd --prefix backend test
+git diff --check
+```
+
+`auth.test.js` teste les endpoints HTTP, Argon2id, les refus génériques, les
+cookies, la rotation, la falsification, l'expiration, la désactivation après
+connexion, CSRF, la déconnexion, les pannes et la configuration de production.
+`auth-sql.test.js` active seulement un compte du seed dans une base PGlite en
+mémoire, y applique 004/007/008 et vérifie login/me/logout, la persistance entre
+deux applications et les droits limités. `auth-ui.test.js` teste l'interface
+avec une doublure DOM. Aucun de ces tests ne se connecte à la base installée.
+Le contrôle manuel éventuel utilise un compte client existant et autorisé, sans
+afficher son mot de passe, son hachage ou ses cookies dans un terminal/capture.
+
+### Parcours de commande client
+
+Le parcours `menus.html` → `commande.html?menu=ID` exige un client actif, conserve
+le menu pendant l'inscription/connexion et préremplit les coordonnées et l'adresse.
+Le devis côté serveur précède la confirmation, vérifie les délais du menu, le stock
+et le tarif. Le prorata des personnes supplémentaires a été **explicitement validé
+par l'utilisateur** ; la remise de 10 % s'applique dès minimum + 5 personnes.
+
+Les commandes, lignes, réservations, événements email et reçus d'idempotence sont
+enregistrés dans une transaction unique. `mes-commandes.html` liste les commandes,
+leurs prix et leur suivi ; modification sans changement de menu et annulation sont
+possibles avant acceptation. L'email local reste préparé en attente, sans envoi.
+
+**Avant un test sur PostgreSQL installé : autorisation requise.** Le script
+`database/009_order_checkout.sql` est préparé, testé uniquement en mémoire et non
+appliqué. Il ajoute les devis, reçus d'idempotence, distances validées et droits
+ciblés. Hors Bordeaux, la commande reste bloquée tant qu'une distance routière
+fiable pour l'adresse n'a pas été vérifiée et enregistrée par un opérateur autorisé.
+Aucune distance n'est inventée, aucun kilométrage transmis par le navigateur n'est accepté.
+
+La [documentation du parcours et des étapes manuelles](docs/COMMANDES.md) détaille
+les décisions, limites, droits SQL, commandes d'application après autorisation et
+tests. Les menus et prestations restent fictifs ; la validation écrira réellement
+dans la base configurée. Aucun essai d'écriture n'a été fait sur la base installée.
+
+### Espace employé — commandes en attente
+
+Après connexion avec un compte `employe` ou `administrateur` actif et autorisé,
+ouvrir `/employe.html` depuis le lien du compte. L'interface affiche les commandes,
+leurs prix/statuts, les filtres par statut ou identifiant client, le détail et
+l'historique. Les données sensibles du détail sont obtenues seulement après
+autorisation serveur, revérifiée en base à chaque action.
+
+Cette étape expose uniquement `en_attente → accepte` ou `en_attente → refusee`,
+en réutilisant les statuts existants. Le refus exige un motif et un contact
+préalable déclaré (téléphone/email et date). Son enregistrement, la restitution
+d'une unité de stock et le changement de statut sont atomiques. Le verrou de
+commande empêche une double restitution ou une décision contraire concurrente.
+Les opérations client restent bloquées après acceptation.
+
+Le script complémentaire `database/010_employee_privileges.sql` est **préparé,
+non appliqué à PostgreSQL installé**. Il ajoute UPDATE `accepted_at` et les droits
+ciblés de traçabilité des contacts, sans nouveau statut ni compte. Le contrôle
+en lecture seule a constaté qu'aucun compte employé/administrateur actif n'est
+actuellement disponible : sa création/activation nécessitera un accord distinct.
+Les comptes des tests existent exclusivement dans une base en mémoire.
+
+Voir [les règles, tests et étapes manuelles de l'espace employé](docs/ESPACE_EMPLOYE.md).
+Les autres étapes de suivi, la gestion du matériel, des menus et des avis restent
+hors du périmètre prioritaire de cette interface.

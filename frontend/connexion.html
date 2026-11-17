@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <link rel="stylesheet" href="inscription.css">
+  <script src="auth-navigation.js" defer></script>
+  <script src="connexion.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#connexion">Aller à la connexion</a>
+  <header class="site-header">
+    <a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html">Menus</a><a href="connexion.html" aria-current="page">Connexion</a></nav>
+  </header>
+  <main id="connexion" class="registration">
+    <h1>Me connecter</h1>
+    <p id="auth-status" role="status" aria-live="polite" tabindex="-1">Vérification de votre session…</p>
+    <p id="auth-error" class="error" role="alert" tabindex="-1"></p>
+    <form id="login-form" method="post" action="/api/auth/login" hidden>
+      <fieldset><legend>Me connecter</legend>
+        <label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" maxlength="254" required>
+        <label for="password">Mot de passe</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+      </fieldset>
+      <button type="submit" disabled>Me connecter</button>
+    </form>
+    <section id="connected" aria-labelledby="connected-title" hidden>
+      <h2 id="connected-title">Votre compte</h2>
+      <p id="user-name"></p>
+      <p id="session-description">Votre session est active.</p>
+      <p><a id="resume-order" href="menus.html" hidden>Reprendre ma commande</a></p>
+      <p><a id="client-orders" href="mes-commandes.html">Mes commandes</a></p>
+      <p><a id="employee-space" href="employe.html" hidden>Accéder à l’espace employé</a></p>
+      <p><a id="admin-space" href="administrateur.html" hidden>Accéder à l’espace administrateur</a></p>
+      <button id="logout" type="button">Me déconnecter</button>
+    </section>
+    <p><a id="signup-link" href="inscription.html">Créer un compte client</a></p>
+    <p><a href="menus.html">Consulter les menus</a></p>
+    <noscript>Activez JavaScript pour vous connecter. Aucun mot de passe n’est transmis sans son activation.</noscript>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF</footer>
+</body>
+</html>

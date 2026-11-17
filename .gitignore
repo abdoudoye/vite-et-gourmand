@@ -11,3 +11,30 @@ credentials.json
 *.bak
 *.backup
 .DS_Store
+
+# Secrets locaux et identifiants techniques (jamais de valeurs reelles dans Git).
+.envrc
+.pgpass
+pgpass.conf
+*.pgpass
+*.key
+*.p12
+*.pfx
+service-account*.json
+secrets/
+private/
+
+# Sauvegardes et exports prives ; conserver les scripts SQL du projet.
+backups/
+exports/
+*.dump
+*.sql.gz
+*.sql.zip
+/audit-resultat.txt
+
+# Fichiers temporaires des editeurs et du systeme.
+*.swp
+*.swo
+*~
+*.pid
+Thumbs.db

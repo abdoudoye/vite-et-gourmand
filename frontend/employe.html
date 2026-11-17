@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Espace employé — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <link rel="stylesheet" href="inscription.css">
+  <link rel="stylesheet" href="employe.css">
+  <script src="employe.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#employee">Aller aux commandes</a>
+  <header class="site-header"><a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="menus.html">Menus</a><a href="connexion.html">Mon compte et déconnexion</a><a href="employe.html" aria-current="page">Espace employé</a></nav>
+  </header>
+  <main id="employee">
+    <h1>Espace employé</h1>
+    <p>Traitement des commandes en attente · Employés et administrateurs autorisés.</p>
+    <p id="employee-status" role="status" aria-live="polite">Vérification de votre accès…</p>
+    <p id="employee-error" class="error" role="alert" tabindex="-1"></p>
+    <div id="employee-content" hidden>
+      <form id="employee-filters">
+        <div><label for="status-filter">Statut</label><select id="status-filter" name="status">
+          <option value="">Tous les statuts</option><option value="en_attente">En attente</option><option value="accepte">Accepté</option>
+          <option value="en_preparation">En préparation</option><option value="en_livraison">En cours de livraison</option><option value="livre">Livré</option>
+          <option value="attente_retour_materiel">En attente du retour de matériel</option><option value="terminee">Terminée</option><option value="annulee">Annulée</option><option value="refusee">Refusée</option>
+        </select></div>
+        <div><label for="client-filter">Identifiant client (facultatif)</label><input id="client-filter" name="clientId" inputmode="numeric" pattern="[1-9][0-9]*" maxlength="19"></div>
+        <button type="submit">Filtrer / actualiser</button>
+      </form>
+      <div class="employee-layout">
+        <section aria-labelledby="orders-title"><h2 id="orders-title">Commandes</h2>
+          <div class="table-scroll" role="region" aria-label="Tableau des commandes, défilement horizontal possible" tabindex="0">
+            <table><caption>Commandes filtrées, par pages de 50</caption><thead><tr>
+              <th scope="col">Référence</th><th scope="col">Menu</th><th scope="col">Prestation</th><th scope="col">Personnes</th><th scope="col">Montant</th><th scope="col">Statut</th><th scope="col">Action</th>
+            </tr></thead><tbody id="employee-orders"></tbody></table>
+          </div>
+          <nav aria-label="Pages des commandes"><button id="employee-previous" type="button" disabled>Page précédente</button><button id="employee-next" type="button" disabled>Page suivante</button></nav>
+        </section>
+        <section id="employee-detail" class="order-conditions" aria-labelledby="detail-title" hidden>
+          <h2 id="detail-title" tabindex="-1">Détail de la commande</h2>
+          <div id="detail-summary"></div>
+          <h3>Historique des statuts</h3><ol id="employee-history"></ol>
+          <h3>Contacts déclarés</h3><ul id="employee-contacts"></ul>
+          <form id="decision-form" method="post" hidden>
+            <fieldset id="decision-fields"><legend>Décider pour cette commande en attente</legend>
+              <button id="accept-order" type="button">Accepter la commande</button>
+              <p>Avant un refus, contactez le client par téléphone ou email puis déclarez ce contact. Ce formulaire n’effectue aucun appel et n’envoie aucun email.</p>
+              <label for="refusal-reason">Motif du refus</label><textarea id="refusal-reason" name="reason" maxlength="500" required></textarea>
+              <label for="contact-method">Mode du contact effectué</label><select id="contact-method" name="contactMethod" required><option value="">Choisir</option><option value="telephone">Téléphone</option><option value="email">Email</option></select>
+              <label for="contact-at">Date et heure du contact effectué (heure locale de votre navigateur)</label><input id="contact-at" name="contactAt" type="datetime-local" required>
+              <button id="refuse-order" type="submit">Refuser et restituer le stock</button>
+            </fieldset>
+          </form>
+        </section>
+      </div>
+    </div>
+    <noscript>Activez JavaScript pour consulter et traiter les commandes après authentification.</noscript>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF · Les commandes de démonstration sont signalées dans leur détail.</footer>
+</body>
+</html>

@@ -42,6 +42,33 @@ test("GET /menus.html publie le véritable HTML, ses scripts, son style et toute
   await withServer(null, verifyCatalogueFiles);
 });
 
+test("une instance à jour sert connexion et inscription tout en conservant les routes API et le catalogue", async () => {
+  await withServer(null, async (base) => {
+    for (const file of ["connexion.html", "connexion.js", "inscription.html", "inscription.js"]) {
+      const response = await fetch(`${base}/${file}`);
+      assert.equal(response.status, 200, file);
+      assert.equal(await response.text(), fs.readFileSync(path.join(__dirname, "../frontend", file), "utf8"));
+    }
+    await verifyCatalogueFiles(base);
+    const me = await fetch(`${base}/api/auth/me`);
+    assert.equal(me.status, 401, "La route me existe, même sans session.");
+    assert.deepEqual(await me.json(), { error: "Authentification requise." });
+    for (const [route, expected] of [["register", 400], ["login", 401], ["logout", 204]]) {
+      const response = await fetch(`${base}/api/auth/${route}`, {
+        method: "POST", headers: { "Content-Type": "application/json", "X-Requested-With": "ViteGourmand" }, body: "{}"
+      });
+      assert.equal(response.status, expected, route);
+    }
+    assert.equal((await fetch(`${base}/api/menus`)).status, 503, "Sans base, l'API reste présente.");
+    const missingApi = await fetch(`${base}/api/inconnue`);
+    assert.equal(missingApi.status, 404);
+    assert.deepEqual(await missingApi.json(), { error: "Ressource introuvable." });
+    const missingPage = await fetch(`${base}/page-inconnue.html`);
+    assert.equal(missingPage.status, 404);
+    assert.match(missingPage.headers.get("content-type"), /^text\/html/);
+  });
+});
+
 test("le dossier statique reste accessible depuis un autre répertoire de lancement", async () => {
   const code = `
     const { createApp } = require(process.argv[1]);
@@ -194,4 +221,20 @@ test("les erreurs de connexion et de requête ne sortent pas du pool en clair", 
     await assert.rejects(database.query("SELECT 1"), { message: "PostgreSQL indisponible." });
     assert.deepEqual(pool.releases, options.failConnect ? [] : [true]);
   }
+});
+
+test("transactions : même connexion vérifiée, COMMIT après succès et ROLLBACK sur erreur métier", async () => {
+  const { database, pool } = fakePool();
+  const value = await database.transaction(async (tx) => {
+    await tx.query("SELECT $1::integer", [1]); return "ok";
+  });
+  assert.equal(value, "ok");
+  assert.deepEqual(pool.calls.map(([sql]) => sql), [ACCOUNT_CHECK_SQL,"BEGIN ISOLATION LEVEL READ COMMITTED","SELECT $1::integer","COMMIT"]);
+  assert.deepEqual(pool.releases,[false]);
+  const error = new Error("Stock épuisé."); error.name = "OrderError";
+  await assert.rejects(database.transaction(async (tx) => { await tx.query("SELECT 2"); throw error; }), { message: "Stock épuisé." });
+  assert.deepEqual(pool.calls.slice(-4).map(([sql]) => sql), [ACCOUNT_CHECK_SQL,"BEGIN ISOLATION LEVEL READ COMMITTED","SELECT 2","ROLLBACK"]);
+  const forbidden = fakePool({ account: { ...allowedAccount, rolsuper: true } });
+  await assert.rejects(forbidden.database.transaction(async () => assert.fail("Ne doit pas commencer")), /indisponible/);
+  assert.equal(forbidden.pool.calls.length,1);
 });

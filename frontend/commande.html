@@ -5,31 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Commander — Vite &amp; Gourmand</title>
   <link rel="stylesheet" href="menus.css">
+  <link rel="stylesheet" href="inscription.css">
   <script src="menu-details.js" defer></script>
   <script src="commande.js" defer></script>
+  <script src="order-checkout.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#commande">Aller au contenu</a>
   <header class="site-header">
     <a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
-    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html">Menus</a></nav>
+    <nav aria-label="Navigation principale"><a href="/">Accueil</a><a href="menus.html">Menus</a><a href="connexion.html">Connexion</a></nav>
   </header>
-  <main id="commande">
+  <main id="commande" class="registration">
     <h1>Commander un menu</h1>
-    <p class="demo"><strong>Parcours de démonstration.</strong> Aucune commande n’est créée, validée ou réservée.</p>
+    <p class="demo"><strong>Menus fictifs du projet pédagogique.</strong> Confirmer enregistre une commande et réserve le stock dans la base configurée. Aucune prestation commerciale réelle.</p>
     <p id="selection-status" role="status" aria-live="polite">Chargement du menu sélectionné…</p>
     <section id="selected-menu" hidden aria-labelledby="selection-title">
       <h2 id="selection-title"></h2>
       <p id="selection-id"></p>
       <p id="selection-description"></p>
-      <div class="order-conditions">
-        <h3>Connexion nécessaire pour continuer</h3>
-        <p>Vous devrez vous connecter à votre compte client ou créer un compte pour commander ce menu.</p>
-        <p>La connexion et le formulaire de commande ne sont pas encore disponibles. Votre choix est conservé dans l’adresse de cette page ; vous pouvez la recharger.</p>
-      </div>
     </section>
+    <p id="checkout-error" class="error" role="alert" tabindex="-1"></p>
+    <form id="checkout-form" method="post" action="/api/orders/quote" hidden>
+      <fieldset><legend>Vos coordonnées</legend><p id="customer"></p><p>Ces coordonnées proviennent de votre compte.</p></fieldset>
+      <fieldset><legend>Votre prestation</legend>
+        <label for="serviceDate">Date de prestation</label><input id="serviceDate" name="serviceDate" type="date" required>
+        <label for="deliveryDate">Date de livraison</label><input id="deliveryDate" name="deliveryDate" type="date" required>
+        <label for="deliveryTime">Heure de livraison (Europe/Paris)</label><input id="deliveryTime" name="deliveryTime" type="time" required>
+        <label for="people">Nombre de personnes</label><input id="people" name="people" type="number" min="1" max="10000" step="1" required aria-describedby="pricing-rule">
+        <p id="pricing-rule"></p>
+      </fieldset>
+      <fieldset><legend>Adresse de livraison</legend>
+        <label for="street">Numéro et voie</label><input id="street" name="street" autocomplete="address-line1" maxlength="200" required>
+        <label for="additionalLine">Complément (facultatif)</label><input id="additionalLine" name="additionalLine" autocomplete="address-line2" maxlength="200">
+        <div class="form-grid">
+          <div><label for="postalCode">Code postal</label><input id="postalCode" name="postalCode" autocomplete="postal-code" maxlength="20" required></div>
+          <div><label for="city">Ville</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" required></div>
+        </div>
+        <label for="countryCode">Code pays (deux lettres)</label><input id="countryCode" name="countryCode" autocomplete="country" value="FR" maxlength="2" pattern="[A-Za-z]{2}" required>
+        <p>Hors Bordeaux : 5 € + 0,59 €/km, uniquement après vérification de la distance par l’équipe. Aucun kilométrage à saisir.</p>
+      </fieldset>
+      <fieldset class="order-conditions"><legend>Conditions à lire</legend>
+        <h3>Commande</h3><p id="order-conditions"></p>
+        <h3>Conservation</h3><p id="storage-conditions"></p><p id="terms-version"></p>
+        <label class="check-label"><input id="conditionsAccepted" name="conditionsAccepted" type="checkbox" required> J’ai lu et j’accepte ces conditions de commande et de conservation.</label>
+      </fieldset>
+      <button id="calculate" type="submit">Calculer le prix avant confirmation</button>
+    </form>
+    <section id="quote" aria-labelledby="quote-title" hidden>
+      <h2 id="quote-title" tabindex="-1">Votre devis</h2>
+      <dl id="price-breakdown"></dl><p id="quote-expiry"></p>
+      <button id="confirm" type="button" disabled>Confirmer et réserver</button>
+    </section>
+    <p id="confirmation" role="status" tabindex="-1"></p>
+    <p><a href="mes-commandes.html">Mes commandes</a></p>
     <p><a class="action-link" href="menus.html">Retour au catalogue</a></p>
-    <noscript>Activez JavaScript pour afficher le menu choisi. Aucune commande ne sera créée.</noscript>
+    <noscript>Activez JavaScript pour afficher le formulaire et le prix avant confirmation.</noscript>
   </main>
   <footer>Vite &amp; Gourmand · Projet pédagogique ECF · Données fictives</footer>
 </body>

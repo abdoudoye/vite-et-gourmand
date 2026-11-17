@@ -36,4 +36,3 @@ async function showSelectedMenu(doc = document, search = window.location.search,
 }
 
 if (typeof module !== "undefined") module.exports = { selectedMenuFromSearch, showSelectedMenu };
-if (typeof document !== "undefined") showSelectedMenu();

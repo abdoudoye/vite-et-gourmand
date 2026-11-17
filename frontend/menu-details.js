@@ -32,7 +32,7 @@ function createMenuDetails(menu, doc = document) {
   const title = add(section, "h4", menu.title);
   title.id = `menu-detail-title-${menu.id}`;
   title.tabIndex = -1;
-  add(section, "p", "Démonstration : illustration, plats, allergènes, conditions et stock fictifs. Aucune commande réelle n’est proposée.");
+  add(section, "p", "Démonstration : illustration, plats, allergènes, conditions et stock fictifs. La validation réserve le stock dans la base du projet ; aucune prestation commerciale réelle.");
   const galleryTitle = add(section, "h5", "Galerie de démonstration — illustrations fictives");
   galleryTitle.id = `gallery-title-${menu.id}`;
   const gallery = doc.createElement("div");

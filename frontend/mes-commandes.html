@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mes commandes — Vite &amp; Gourmand</title>
+  <link rel="stylesheet" href="menus.css">
+  <link rel="stylesheet" href="inscription.css">
+  <script src="mes-commandes.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#orders">Aller aux commandes</a>
+  <header class="site-header"><a class="brand" href="/">Vite <span>&amp;</span> Gourmand</a>
+    <nav aria-label="Navigation principale"><a href="menus.html">Menus</a><a href="connexion.html">Mon compte</a><a href="mes-commandes.html" aria-current="page">Mes commandes</a></nav>
+  </header>
+  <main id="orders" class="registration">
+    <h1>Mes commandes</h1>
+    <p class="demo">Projet pédagogique : menus et prestations fictifs. Vos commandes sont affichées par pages de 50.</p>
+    <p id="orders-status" role="status" aria-live="polite">Chargement des commandes…</p>
+    <p id="orders-error" class="error" role="alert"></p>
+    <div id="orders-list"></div>
+    <nav aria-label="Pages des commandes"><button id="previous-page" type="button" disabled>Page précédente</button><button id="next-page" type="button" disabled>Page suivante</button></nav>
+    <p><a href="menus.html">Choisir un menu</a></p>
+    <noscript>Activez JavaScript pour consulter vos commandes.</noscript>
+  </main>
+  <footer>Vite &amp; Gourmand · Projet pédagogique ECF</footer>
+</body>
+</html>
