@@ -1,5 +1,15 @@
 # Espace employé — traitement des commandes en attente
 
+## État au 18 novembre 2026
+
+**Développé :** consultation et décisions initiales décrites ci-dessous.
+**Tests automatisés :** 163 réussis lors du dernier audit global, sans nouvelle
+exécution pour cette documentation. **PostgreSQL local :** acceptation/refus
+validés. **Production :** les connexions des trois rôles sont confirmées par le
+porteur ; cela ne prouve pas une recette exhaustive des décisions sur Neon.
+L'espace est disponible sur https://vite-et-gourmand-y9b8.onrender.com/employe.html.
+Voir [déploiement](DEPLOIEMENT.md). Les e-mails réels sont désactivés.
+
 ## Périmètre et source
 
 Le sujet officiel fourni hors dépôt décrit l'espace employé page 8 et les droits
@@ -114,7 +124,7 @@ Le compte web ne reçoit aucun droit d'écriture directe dans cette table. Le d�
 prend un verrou partagé court sur la commande pour éviter de mélanger un ancien
 résumé avec l'historique d'une décision concurrente.
 
-## SQL préparé, sans application réelle
+## SQL appliqué et limites de validation
 
 `database/010_employee_privileges.sql` complète les profils 007/009 :
 
@@ -134,29 +144,30 @@ technique partagé. Le profil SQL ne distingue pas une session client d'une sess
 employé et ne remplace pas les contrôles des routes ; aucune politique RLS n'est
 présentée comme implémentée.
 
-Le contrôle réel a utilisé exclusivement une transaction READ ONLY. Il a confirmé
-les tables/statuts et constaté l'absence des droits supplémentaires de 010 ainsi
-que l'absence de compte employé/administrateur actif. Aucune donnée personnelle,
-aucun mot de passe ni hachage n'a été affiché et aucun compte n'a été créé.
+Le contrôle initial READ ONLY avait constaté l'absence des droits de 010 et de
+comptes de personnel actifs. C'est un état historique : 010 a depuis été appliqué
+sur PostgreSQL local et Neon. Les comptes de démonstration ont été provisionnés
+séparément du seed ; leurs connexions en production sont confirmées.
 
-## Validation réelle après autorisation
+## Recette métier après autorisation
 
-Après accord explicite pour les privilèges, depuis la racine du dépôt :
+Exemple historique pour une nouvelle base locale uniquement, après revue et
+autorisation. Ne pas rejouer sur les bases déjà configurées :
 
 ```powershell
 & 'C:\Program Files\PostgreSQL\18\bin\psql.exe' -X -h 127.0.0.1 -p 5432 -U vg_migrator -d vite_et_gourmand -W -v ON_ERROR_STOP=1 -f database/010_employee_privileges.sql
 ```
 
-Ne pas exécuter cette commande tant que l'application des droits n'est pas
-autorisée. La création/activation d'un compte personnel dédié exige également
-un accord distinct ; aucun compte de production/démonstration réellement
-connectable n'a été créé pendant le développement. Un compte doit être actif,
-de rôle `employe` ou `administrateur`, avec un hachage Argon2id valide.
+010 fait partie des huit scripts déjà appliqués sur Neon ; aucune migration
+n'est requise pour se connecter. Le compte doit être actif, de rôle `employe`
+ou `administrateur`, avec un hachage Argon2id valide. Les comptes du seed sont
+inactifs et ne remplacent pas les comptes provisionnés pour le jury.
 
-Après ces autorisations, redémarrer le serveur dans son terminal existant
-(Ctrl+C, puis `node backend/server.js`). Utiliser un second terminal pour les
-autres commandes. Ouvrir http://127.0.0.1:3000/connexion.html puis le lien vers
-http://127.0.0.1:3000/employe.html. Garder `EMAIL_MODE=disabled` pour les essais.
+Pour une recette locale, démarrer Express sans migration et utiliser un second
+terminal si nécessaire. En production, passer par `/connexion.html` puis le lien
+employé. Garder `EMAIL_MODE=disabled`. La connexion crée une session SQL ; les
+décisions modifient les données : une nouvelle recette nécessite une autorisation.
+Les validations locales ne suffisent pas à déclarer tous ces essais réalisés sur Neon.
 
 Préparer des commandes fictives via le parcours client autorisé afin qu'une
 réservation ait bien été faite. Ne pas utiliser une commande déjà annulée/refusée

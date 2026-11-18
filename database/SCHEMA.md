@@ -1,34 +1,27 @@
 # Schéma PostgreSQL et règles serveur
 
 Source métier : sujet officiel Studi fourni hors dépôt, pages 4 à 9 et livrables
-pages 11 à 12. Les scripts ciblent PostgreSQL 16 ou supérieur ; l'installation
-déclarée utilise désormais PostgreSQL 18.6 et la base existante `vite_et_gourmand`.
-Les scripts `001`, `002`, `003` sont déclarés appliqués historiquement ; les droits
-ont ensuite été restreints et complétés. **009, 010 et 011 ont été appliqués sur
-PostgreSQL local**, selon les confirmations du porteur du projet. Leurs objets et
-permissions ont été contrôlés en lecture seule. Ne pas les rejouer au démarrage,
-ni rétablir le profil large de 003 après les restrictions de 004.
-Le schéma `vg` évite de mélanger les tables du projet
-avec `public`. Les scripts n'ont aucune opération de suppression de schéma/table.
+pages 11 à 12. Les scripts ciblent PostgreSQL 16 ou supérieur. L'installation
+locale historique est PostgreSQL 18.6, base `vite_et_gourmand` ; la production
+utilise Neon PostgreSQL 18.7, base `neondb`. Le schéma `vg` isole les objets du projet.
 
-## État des preuves — 17 novembre 2026
+## État des preuves — 18 novembre 2026
 
-- **Fonctionnalité développée :** authentification, devis et commandes, prix,
-  transactions de stock, décisions employé, administration et avis dans le périmètre
-  décrit ci-dessous. Un champ prévu dans le schéma ne suffit pas à établir qu'un
-  parcours est développé ; c'est notamment le cas du suivi de livraison/matériel.
-- **Test automatisé réussi :** dernière suite complète de 163 tests, sans échec,
-  avec PGlite en mémoire et clients simulés. Les tests de prix, droits et stock
-  réussissent ; ils ne se connectent pas à PostgreSQL installé.
-- **Validation sur PostgreSQL local :** fonctionnement des comptes client,
-  employé et administrateur et du parcours client confirmé par le porteur ;
-  acceptation/refus vérifiés localement. Les recettes exhaustives d'administration,
-  de concurrence multi-connexions et de distance réelle restent à effectuer.
-- **Déploiement public :** non réalisé. La cible gratuite Neon/Render/Atlas est
-  une architecture validée, pas une infrastructure déjà créée ou testée.
+| Niveau | État |
+| --- | --- |
+| Fonctionnalité développée | Authentification, devis/prix, commandes et stock, acceptation/refus employé, administration et avis dans les limites décrites ci-dessous |
+| Test automatisé réussi | Dernier audit : 163 tests réussis, zéro échec, PGlite et clients simulés ; pas de nouvelle exécution pour cette documentation |
+| PostgreSQL local | 009, 010 et 011 appliqués ; connexions des trois rôles, parcours client et acceptation/refus validés |
+| Production | Huit scripts appliqués sur Neon avec COMMIT ; 24 tables, une vue, cinq fonctions et sept triggers utilisateur, contraintes contrôlées sans contrainte non validée. Connexions des trois rôles, catalogue, commandes client et stock confirmés par le porteur |
+| À valider séparément | Recette exhaustive d'administration, concurrence multi-connexions, distance réelle, responsive et accessibilité |
 
-Les anciens comptes rendus, dont `REGISTRATION_AUDIT.md`, sont des photographies
-datées de l'installation et non une liste actuelle des migrations à appliquer.
+Ordre appliqué sur Neon : **001, 002, 004, 007, 008, 009, 010, 011**.
+Le profil large 003 appartient à l'historique local, pas au parcours Neon.
+Ne rejouer ni les migrations, ni les seeds au démarrage. Les scripts 000, 003,
+005, 006 et les réparations locales sont exclus de ce parcours distant.
+Les archives `REGISTRATION_AUDIT.md` et `repairs/README.md` ne constituent pas
+une liste actuelle d'actions à exécuter. Voir [déploiement](../docs/DEPLOIEMENT.md).
+MongoDB/statistiques ne sont pas développés et les e-mails réels sont désactivés.
 
 ## Relations et tables
 
@@ -57,6 +50,16 @@ erDiagram
     orders ||--o| reviews : recueille
     orders o|--o{ email_outbox : notification
     users o|--o{ email_outbox : destinataire
+    users ||--o{ order_quotes : demande
+    users ||--o{ order_receipts : confirme
+    orders ||--o{ order_receipts : identifie
+    order_quotes ||--o| order_receipts : consomme
+    users ||--o{ delivery_distances : verifie
+    web_sessions {
+        text sid_digest PK
+        jsonb session_data
+        timestamptz expires_at
+    }
 ```
 
 | Tables | Champs et rôle principaux |
@@ -75,9 +78,9 @@ erDiagram
 | `reviews` | Un avis par commande, note 1–5, commentaire, état et auteur/date de modération. |
 | `opening_hours` | Une plage par jour ISO (lundi=1, dimanche=7), ou jour fermé. Hypothèse simple ; plusieurs plages nécessiteraient une évolution. |
 | `email_outbox` | Notifications à envoyer, destinataire, type, état, date d'envoi et tentatives. Envoi SMTP conditionnel développé ; réception d'e-mails réels non validée, reprise automatique absente. |
-| `order_quotes`, `order_receipts` (009) | Devis temporaires et reçus d'idempotence pour éviter les doubles confirmations ; présents localement. |
+| `order_quotes`, `order_receipts` (009) | Devis temporaires et reçus d'idempotence pour éviter les doubles confirmations ; présents localement et sur Neon. |
 | `delivery_distances` (009) | Distance vérifiée, source, vérificateur et expiration ; lecture seule pour `vg_app`, sans kilomètres inventés. |
-| `web_sessions` (008) | Stockage des sessions PostgreSQL développé et testé en mémoire ; table absente au dernier audit local, mode mémoire actuellement utilisé. |
+| `web_sessions` (008) | Stockage PostgreSQL développé et testé ; table créée sur Neon et utilisée en production. L’absence décrite dans l’ancien audit concernait uniquement cet état local historique. |
 
 La vue `order_totals` additionne la ligne nette et la livraison sans dupliquer un
 total modifiable. Les montants sont en centimes entiers ; les totaux sont élargis en
@@ -104,7 +107,7 @@ total modifiable. Les montants sont en centimes entiers ; les totaux sont élarg
 - Statut initial et changements historisés automatiquement. Le compte applicatif
   ne peut pas écrire directement dans l'historique ni supprimer les commandes.
 - Les comptes du seed 002 sont désactivés, sans hachage ni mot de passe. Des
-  comptes fictifs actifs ont été provisionnés séparément pour les essais locaux ;
+  comptes fictifs actifs ont été provisionnés séparément pour les essais locaux et en production ;
   ils ne sont pas créés par le seed et leurs secrets ne figurent pas dans Git.
   Un compte actif exige un hachage ; la contrainte de préfixe ne garantit pas sa validité
   cryptographique. Le backend produit et vérifie les hachages avec Argon2id ;
@@ -146,7 +149,8 @@ opérateur autorisé doit vérifier l'itinéraire et documenter le point de dép
 et la convention de trajet avant alimentation. Aucune distance réelle n'est
 inventée ; les démonstrations SQL sont à Bordeaux et les distances des tests
 sont fictives. Une validation locale de livraison hors Bordeaux avec source
-réelle et le déploiement public ne sont pas déclarés réalisés.
+réelle reste à valider. Le déploiement public est réalisé, sans prouver un
+itinéraire ni une livraison effectivement effectuée.
 
 **Stock — transactions développées :** nombre de commandes encore possibles pour
 ce menu, pas un nombre de portions. La consultation du catalogue, la sélection et
@@ -167,8 +171,10 @@ ont été validés localement ; le contrôle en lecture seule d'un refus confirm
 l'historique et le stock courant, pas des stocks antérieurs non relevés. Aucun
 journal des mouvements ni stock par date n'est développé : on ne peut pas
 reconstituer rétrospectivement un stock initial fiable à partir du seed.
-Les essais multi-connexions PostgreSQL et la recette publique restent distincts
-des tests en mémoire et ne sont pas présentés comme réalisés.
+La réservation du parcours client est confirmée en production. La recette
+exhaustive multi-connexions reste à effectuer. Le catalogue interroge Neon via
+l'API sans cache HTTP, mais une page ouverte peut conserver son instantané.
+Les commandes du seed n'ont pas décrémenté le stock par le parcours applicatif.
 
 **Filtre personnes :** le champ désigne la taille du groupe ; `minimum_people <=
 taille_du_groupe`. Ce sens n'est pas précisé par l'énoncé et reste notre choix documenté.
@@ -178,7 +184,7 @@ taille_du_groupe`. Ce sens n'est pas précisé par l'énoncé et reste notre cho
 - Autorisations et rôle actif à chaque action ; l'inscription publique fixe
   `utilisateur`. Création initiale d'administrateur hors inscription, avec un hachage
   généré localement et sans secret versionné : développés et testés. Les connexions
-  des trois rôles sont confirmées localement. Aucun administrateur n'est créé par le seed.
+  des trois rôles sont confirmées localement et en production par le porteur. Aucun administrateur n'est créé par le seed.
 - Validation du téléphone/e-mail/adresse, robustesse du mot de passe avant hachage,
   limitation d'abus et sessions : développées et testées. La consommation d'un
   jeton de réinitialisation n'est pas développée ; seule sa table existe.
@@ -226,8 +232,9 @@ compte technique `vg_app`.
 
 Les limites restantes comprennent MongoDB absent, accueil provisoire,
 réinitialisation absente, suivi de livraison/matériel incomplet et e-mails réels
-non validés. Les choix de déploiement gratuit ne sont pas une preuve de publication :
-aucun déploiement public n'a encore été réalisé.
+non validés et désactivés en production. Render et Neon sont déployés ; cela
+ne rend pas les fonctionnalités absentes disponibles. Les secrets techniques et
+les mots de passe des comptes jury restent hors Git, dans des supports privés distincts.
 
 Références techniques : [contraintes PostgreSQL](https://www.postgresql.org/docs/current/ddl-constraints.html),
 [chargement .env Node.js](https://nodejs.org/api/process.html#processloadenvfilepath),

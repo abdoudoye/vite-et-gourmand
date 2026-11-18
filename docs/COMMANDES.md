@@ -1,5 +1,17 @@
 # Parcours de commande client
 
+## État au 18 novembre 2026
+
+**Développé :** devis, prix détaillé, confirmation transactionnelle, réservation,
+modification et annulation avant acceptation. **Tests automatisés :** dernier
+audit global de 163 tests réussis, non relancés pour cette documentation.
+**PostgreSQL local :** parcours client et décisions employé validés.
+**Production :** catalogue, commandes client et réservation du stock confirmés
+par le porteur sur Render/Neon ; les scénarios exhaustifs restent à recetter.
+Voir [déploiement](DEPLOIEMENT.md) et https://vite-et-gourmand-y9b8.onrender.com/.
+Les e-mails sont désactivés ; l'inscription crée un client actif sans confirmation
+par e-mail. Aucun envoi réel n'est nécessaire pour se connecter ou commander.
+
 ## Source et décisions
 
 Le sujet officiel Studi fourni hors dépôt décrit les commandes page 7 et le
@@ -65,7 +77,7 @@ Ce parcours n'est pas un audit juridique ou RGAA complet.
 
 ## Livraison fiable, sans distance simulée
 
-La gratuité locale nécessite `countryCode=FR`, la ville Bordeaux (normalisée) et
+La gratuité de livraison à Bordeaux nécessite `countryCode=FR`, la ville Bordeaux (normalisée) et
 un code postal bordelais parmi 33000, 33100, 33200, 33300, 33800. Cette validation
 de saisie ne vérifie pas l'existence réelle de la voie : une validation postale
 ou géographique reste à intégrer avant exploitation commerciale.
@@ -148,7 +160,8 @@ ne remplace pas cette autorisation applicative et n'implémente pas RLS.
 L'événement `confirmation_commande` entre dans `email_outbox` dans la même
 transaction, sans mot de passe ni jeton. Un texte de confirmation est préparé
 par `order-email.js`. Avec `EMAIL_MODE=disabled` (défaut local), aucun transport
-SMTP n'est créé : l'événement reste `en_attente`.
+SMTP n'est créé : l'événement reste `en_attente`. Ce mode est aussi celui de
+la production ; aucun e-mail réel ne part et cela ne bloque pas la commande.
 
 Avec SMTP explicitement configuré, l'envoi est tenté **après COMMIT**, puis
 l'événement est marqué `envoye` si le serveur SMTP l'accepte. Un échec laisse
@@ -159,18 +172,21 @@ réponse SMTP acceptée suivie d'un échec de mise à jour SQL.
 
 ## SQL et étapes manuelles
 
-Le contrôle des objets dans la base installée a été fait dans une transaction
-READ ONLY : les tables métier existent ; `order_quotes`, `order_receipts` et
-`delivery_distances` n'existent pas encore. Aucune écriture réelle n'a été faite.
+Le contrôle READ ONLY initial précédait 009. Depuis, `order_quotes`,
+`order_receipts` et `delivery_distances` existent sur PostgreSQL local et Neon.
+Sur Neon, les huit scripts 001, 002, 004, 007, 008, 009, 010 et 011 ont été
+appliqués avec COMMIT et contrôle indépendant. Ne pas rejouer ces migrations.
 
 `database/009_order_checkout.sql` crée ces trois tables et leurs index, puis ajoute
 les lectures et écritures ciblées nécessaires au profil restreint. Il réutilise
 les tables/contraintes existantes et ne crée pas de séquence. Il n'ajoute aucun
 compte, commande ou distance. L'application ne l'exécute jamais automatiquement.
 Le script suppose le schéma 001 et les droits de base de 004/007 installés ;
-008 n'est nécessaire que si le stockage des sessions est PostgreSQL.
+008 est nécessaire au stockage PostgreSQL des sessions, utilisé sur Render.
+Sa table est présente sur Neon ; le mode mémoire est une option locale.
 
-**Après autorisation explicite seulement**, depuis la racine :
+**Référence pour une nouvelle base locale seulement**, après revue et
+autorisation ; ne pas exécuter sur les bases déjà configurées :
 
 ```powershell
 & 'C:\Program Files\PostgreSQL\18\bin\psql.exe' -X -h 127.0.0.1 -p 5432 -U vg_migrator -d vite_et_gourmand -W -v ON_ERROR_STOP=1 -f database/009_order_checkout.sql
@@ -183,7 +199,7 @@ L'entretien des devis expirés inutilisés devra préserver ceux référencés p
 les reçus ; les durées de conservation des adresses/devis relèvent de la politique
 RGPD à préciser. Aucun effacement automatique n'est exécuté.
 
-Après application autorisée, redémarrer le serveur existant (Ctrl+C dans son
+Pour une base locale déjà configurée, démarrer le serveur sans migration (Ctrl+C dans son
 terminal, puis commande ci-dessous) ; utiliser un second terminal pour les autres
 commandes. Ne pas lancer un second serveur sur le même port.
 
@@ -216,10 +232,17 @@ modifications, prix changé, devis expiré, rollback après panne de notificatio
 SMTP simulé. Les tests UI emploient une doublure DOM pour vérifier le parcours,
 les erreurs et l'invalidation d'un devis après modification du formulaire.
 
+La réservation dès `en_attente` a été vérifiée en production. L'acceptation
+employé ne décrémente pas à nouveau. L'API catalogue utilise `no-store`, mais une
+page déjà ouverte conserve les données chargées tant qu'elle n'est pas rechargée.
+Les commandes du seed ne sont pas passées par la réservation applicative. Sans
+journal de mouvements, un stock antérieur non relevé ne peut pas être reconstitué.
+
 PGlite sérialise ses transactions sur sa connexion interne : les tests de requêtes
 concurrentes ne remplacent pas un test multi-connexions sur PostgreSQL installé.
 Ce dernier, l'affichage réel à 375 px et au clavier, la source de distances et un
 envoi SMTP réel restent des vérifications manuelles après autorisation appropriée.
 L'[espace employé](ESPACE_EMPLOYE.md) traite désormais l'acceptation et le refus
-des demandes en attente. Les traitements de fin de commande (retour de matériel
-et avis) restent à développer ; l'ensemble de l'ECF n'est pas déclaré terminé.
+des demandes en attente. Le cycle de livraison et de retour de matériel jusqu'à `terminee` reste
+incomplet. Le dépôt d'avis est développé mais exige une commande terminée ;
+l'ensemble de l'ECF n'est pas déclaré terminé.

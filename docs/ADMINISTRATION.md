@@ -8,28 +8,26 @@ commande terminée, les droits employés et l’administration. La page 10 impos
 une base relationnelle et une base non relationnelle, sans imposer MongoDB.
 MongoDB est le choix technique déjà retenu pour ce projet.
 
-## État actuel et niveaux de preuve — 17 novembre 2026
+## État actuel et niveaux de preuve — 18 novembre 2026
 
-Le code a été sauvegardé dans le commit
-`aa420cf12a0ab2da95dc150c13b379ab6af31348`, puis intégré par fast-forward dans
-`develop` et `main`. Ces trois branches étaient synchronisées avant cette mise
-à jour documentaire, effectuée sur `main`. Aucun nouveau commit documentaire
-n'est compris dans cette référence.
+Application : https://vite-et-gourmand-y9b8.onrender.com/ ; dépôt public :
+https://github.com/abdoudoye/vite-et-gourmand. La version publiée utilise un
+historique anonymisé ; les anciens hashes locaux ne sont pas ses références.
+Les branches et commits courants doivent être vérifiés dans Git avant publication.
 
 | Niveau de preuve | État actuel |
 | --- | --- |
-| Fonctionnalité développée | Contrôle administrateur actif, consultation des commandes, création/consultation/désactivation des employés, modification des informations et du stock des menus, modération des avis ; périmètre détaillé ci-dessous |
-| Test automatisé réussi | Dernière suite complète : 163 tests réussis, aucun échec, le 17 novembre 2026 ; bases PGlite et clients SQL simulés, sans modification de PostgreSQL local |
-| Validation sur PostgreSQL local | 009, 010 et 011 appliqués, objets/droits contrôlés en lecture seule ; connexions client/employé/administrateur et parcours client confirmés par le porteur ; acceptation/refus validés localement |
-| Validation encore à effectuer | Recette exhaustive de création/désactivation d'employé, édition des menus et modération des avis sur PostgreSQL local ; les tests automatisés ne suffisent pas à la déclarer faite |
-| Déploiement public | Non réalisé ; aucune validation sur Neon, Render ou Atlas déclarée |
+| Fonctionnalité développée | Accès administrateur actif, commandes, création/consultation/désactivation des employés, édition des menus existants et du stock, modération des avis |
+| Test automatisé réussi | Dernier audit : 163 tests réussis, zéro échec ; PGlite et clients simulés. Suite non relancée pour cette mise à jour documentaire |
+| Validation PostgreSQL local | Migrations 009, 010 et 011 appliquées ; connexions des trois rôles et acceptation/refus validés |
+| Validation en production | Render et Neon opérationnels ; connexions client, employé et administrateur confirmées par le porteur, ainsi que catalogue, commandes client et réservation du stock |
+| À tester séparément en production | Recette exhaustive création/désactivation d'employé, modification des menus, modération, concurrence réelle et affichage responsive/clavier |
 
-Les anciens comptes rendus décrivent l'état au moment de chaque développement.
-Les mentions « préparé », « non appliqué », « aucun compte actif » ou « aucun
-commit » dans ces archives ne remplacent pas cet état courant. Notamment,
-`database/REGISTRATION_AUDIT.md` reste un audit daté du 16 novembre, et les
-documents de parcours conservés peuvent contenir des instructions antérieures.
-Le [README](../README.md) est le point d'entrée actualisé pour l'installation.
+MongoDB et les statistiques ne sont pas développés ; les e-mails réels sont
+désactivés. Les anciens comptes rendus sont des états datés, notamment
+`database/REGISTRATION_AUDIT.md` (16 novembre). Leurs mentions « non appliqué »
+ou « aucun compte actif » ne décrivent pas l'état courant.
+Voir le [README](../README.md) et le [déploiement](DEPLOIEMENT.md).
 
 ## Parcours disponibles
 
@@ -113,12 +111,14 @@ existante. Les réponses protégées portent `Cache-Control: no-store`. L’inte
 efface les données protégées sur perte de droits et sortie de page, et recharge
 si le navigateur restaure la page depuis son cache de navigation.
 
-## SQL : développé, testé en mémoire et appliqué localement
+## SQL : développé, testé, appliqué localement et sur Neon
 
 `database/011_admin_privileges.sql` complète les profils 004, 007, 009 et 010.
 Il a été revu, corrigé pour limiter les lectures aux colonnes utiles, puis
 **appliqué sur PostgreSQL local**, selon la confirmation du porteur du projet.
-Les droits effectifs ont été vérifiés en lecture seule. Toute application sur
+Il fait aussi partie des huit migrations appliquées sur Neon avec COMMIT et
+contrôle indépendant en lecture seule. Les droits effectifs ont été vérifiés.
+Toute application sur
 une nouvelle base exige une revue et une autorisation distinctes, avec le compte
 de migration capable de prendre le rôle `vg_owner`.
 Il ne crée ni utilisateur ni donnée et n’est jamais lancé au démarrage Express.
@@ -135,11 +135,12 @@ du périmètre du compte applicatif, à revoir avant chaque nouvelle installatio
 Sur une base neuve dépourvue de ces droits, les routes concernées peuvent répondre
 503. Les tests appliquent le script exclusivement dans une base PGlite jetable
 en mémoire ; cela est distinct de son application locale autorisée par le porteur.
-009 et 010 sont également appliqués localement. Ne rejouer ni ces scripts ni
-les seeds pour simplement démarrer Express. Les connexions locales utilisent
-actuellement les sessions mémoire ; la table de 008 était absente au dernier
-audit. La persistance des sessions PostgreSQL reste à valider sur une installation
-qui utilise effectivement ce mode.
+009 et 010 sont également appliqués localement et sur Neon. Ne rejouer ni ces
+scripts ni les seeds pour démarrer Express. En production, `SESSION_STORE=postgres`
+utilise `vg.web_sessions`, créée par 008. L'absence de cette table et les sessions
+mémoire décrites dans l'ancien audit concernaient l'installation locale à cette
+date, pas Render. La persistance effective après un redéploiement et le nettoyage
+des sessions expirées restent à vérifier ; aucun nettoyage planifié n'est fourni.
 
 ## Statistiques et MongoDB : analyse avant implémentation
 
@@ -177,8 +178,8 @@ déjà réalisée. Aucune dépendance MongoDB ou variable de connexion inactive 
 ## Vérification et suites
 
 **Compte rendu initial :** la première suite comprenait 155 tests réussis.
-**Validation automatisée actuelle :** 163 tests ont réussi, sans échec, le
-17 novembre 2026 avec `npm.cmd --prefix backend test`, après ajout des 8 tests
+**Validation automatisée actuelle :** 163 tests ont réussi, sans échec, lors
+du dernier audit avec `npm.cmd --prefix backend test`, après ajout des 8 tests
 du provisionnement administrateur. `git diff --check` et le contrôle de l'index
 ont également réussi lors de la sauvegarde Git. Ces résultats sont ceux des
 exécutions déjà consignées ; cette mise à jour documentaire ne relance pas de
@@ -189,7 +190,8 @@ administrateur fonctionnent désormais sur PostgreSQL installé, selon le porteu
 du projet. Les décisions d'acceptation/refus ont été validées sur cette base.
 Le contrôle en lecture seule d'une commande refusée a confirmé l'historique et
 le stock courant, sans prouver un stock antérieur non journalisé. Aucun résultat
-de ces essais locaux n'est assimilé à un déploiement public.
+de ces essais locaux n'est assimilé à une recette exhaustive en production.
+Les connexions des trois rôles sur Render/Neon sont confirmées séparément.
 
 Depuis la racine dans un second terminal si le serveur occupe déjà le premier :
 
@@ -223,11 +225,10 @@ d’association de plats/allergènes, de création/suppression de menus ou de mo
 pas de modération dans l’interface employé ; pas de notification à la terminaison
 d’une commande ; pas de nouvelles transitions de livraison/matériel. Ces éléments
 du sujet, la réinitialisation du mot de passe, l’accueil et les statistiques
-MongoDB restent à compléter. Les e-mails réels ne sont pas validés et aucun
-déploiement public n'a été réalisé. La cible gratuite GitHub + Render Free +
-Neon Free + Atlas M0 a été validée comme architecture, sans provisionnement ni
-adaptateur d'e-mail HTTPS déjà réalisé. La copie officielle à rendre reste
-aussi à fournir.
+MongoDB restent à compléter. Les e-mails réels sont désactivés. GitHub public,
+Render Free et Neon Free sont utilisés ; Atlas M0 reste une cible non intégrée.
+Aucun adaptateur d'e-mail HTTPS n'est développé. Les autres livrables ECF doivent
+être vérifiés séparément : cette documentation ne constitue pas leur réalisation.
 
 ## Fichiers concernés par cette étape
 
@@ -239,8 +240,8 @@ aussi à fournir.
   `frontend/connexion.js`, `frontend/mes-commandes.js`.
 - Tests : nouveaux `backend/admin.test.js`, `backend/admin-ui.test.js` et extension
   de `backend/auth-ui.test.js` pour le lien réservé à l’administrateur.
-- SQL développé, testé en mémoire et appliqué localement : `database/011_admin_privileges.sql`.
+- SQL développé, testé en mémoire et appliqué localement et sur Neon : `database/011_admin_privileges.sql`.
 - Documentation : ce fichier et `README.md`.
 
-Les autres modifications déjà présentes dans le répertoire de travail avant
-cette étape sont conservées.
+Cette liste décrit les fichiers du développement initial, pas les seuls fichiers
+modifiés lors de la présente actualisation documentaire.
